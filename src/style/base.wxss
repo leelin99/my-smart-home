@@ -1,0 +1,65 @@
+text,
+view{
+margin:0;
+padding:0;
+}
+page {
+font-size: 32rpx;
+background-color: #efeff4;
+}
+.margin-top20{
+		margin-top: 20px;
+	}
+.margin-left20{
+	margin-left: 20px;
+}
+.border-bottom{
+		border-bottom: 1px solid white;
+	}
+.relative{
+	position: relative;
+}
+.absolute{
+	position: absolute;
+}
+.center{
+    margin:auto;
+}
+.colorgray{
+    color:#999
+}
+.colorgreen{
+	color:#4cd964
+}
+.colorblue{
+    color:#007aff;
+}
+.right{
+    position:absolute;
+    right:20px
+}
+.fontsize30{
+    font-size: 40rpx;
+}
+.textcenter{
+	text-align:center
+}
+.block{
+	display:block;
+}
+.float{
+	float:left
+}
+.inline-block{
+	display:inline-block
+}
+.padding5{
+	padding:5px
+}
+.flexcenter{
+	display: flex;
+	justify-content: center;
+	align-items:center ;
+	width: 100vw;
+	height: 50vh;
+}

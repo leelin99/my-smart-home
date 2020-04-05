@@ -11,7 +11,7 @@
 		}
 	}
 </script>
-
 <style>
-	/*每个页面公共css */
+	@import "./style/iconfont.wxss"; 	
+	@import "./style/base.wxss"; 
 </style>
