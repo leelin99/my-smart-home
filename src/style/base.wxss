@@ -53,6 +53,9 @@ background-color: #efeff4;
 .inline-block{
 	display:inline-block
 }
+.inline{
+	display:inline
+}
 .padding5{
 	padding:5px
 }

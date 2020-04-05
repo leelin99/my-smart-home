@@ -2,18 +2,16 @@
     <view class="content">
 				<view class="mark"></view>
 				<view class="modal">
-					 <view class="title textcenter" style="color:white;background-color:green;padding:10px">{{title}}</view>
+					 <view class="title textcenter" style="color:black;padding:10px">{{title}}</view>
        				<view class="main">
-       				    <text class="padding5">请输入房间名</text>
-       				     <input confirmtype="text" style="width:30vw;display: inline-block;" v-model="value">
+       				     <label style="width:20vw">房间名</label>
+       				     <input confirmtype="text" placeholder="请输入用房间名" v-model="value">
        				</view>      
-       				<view class="comfirm"> 
-            <view class="inline-block textcenter colorgreen" style="width:34vw;border-right:1px solid lightgrey" @click="confirm()">确定</view>
-            <view class="inline-block textcenter colorgray" style="width:35vw;" @click="cancel()">取消</view>  
+       			<view class="comfirm"> 
+            	<view class="inline-block textcenter colorblue" style="width:34vw;" @click="confirm()">确定</view>
+            	<view class="inline-block textcenter colorgray" style="width:35vw;" @click="cancel()">取消</view>  
        		</view>  
 				</view>
-       
-
     </view>
 </template>
 
@@ -60,16 +58,18 @@ export default {
 			border-radius:10px ;
 			width:70vw;
 			display: flex;
-      flex-direction: column;
+       flex-direction: column;
 		}
     .main{
         /* text-align: left; */
-        padding:20px 0;
+				padding:20px;
+				display: flex;
         flex-direction: row;
+        /* justify-content: center;
+				align-items: center; */
         /* justify-content:space-between; */
-    }
-    .comfirm{
-        border-top:1px solid lightgrey;
-        /* justify-content:space-between; */
-    }
+		}
+		.comfirm{
+			margin-bottom:10px
+		}
 </style>
