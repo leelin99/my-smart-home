@@ -1,7 +1,8 @@
 const mongoose = require("mongoose")
 const Schema = mongoose.Schema
 const roomSchema = new Schema({
-    name:{type:String,required:true},
+    roomName:{type:String,required:true},
     equipmentNum:Number,
 })
-co
+const roommodel = mongoose.model("roomList",roomSchema)
+module.exports = roommodel

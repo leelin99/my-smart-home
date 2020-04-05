@@ -33,7 +33,7 @@
 				<view>{{item.roomName}}</view>
 				<view class="colorgray">{{item.equipmentNum}}个设备</view>
 				<view class="border-bottom center"></view>
-				<view class="iconfont icon-jiantou1 absolute arrow" @tap="taproom(item)"></view>
+				<view class="iconfont icon-jiantou1 absolute arrow" @tap="taproom"></view>
 			</view>
 		</view>
 		<view class="flexcenter">
@@ -108,7 +108,7 @@
 			// 房间跳转路由
 			taproom(e){
 				uni.navigateTo({
-                    url: './roomdetail?roomname='+e.roomName,
+                    url: '../info/info?newsid='+newsid,
                     success: res => {},
                     fail: () => {},
                     complete: () => {}

@@ -5,6 +5,11 @@
 			"style": {
 				"navigationBarTitleText": "首页"
 			}
+		},{
+			"path": "pages/index/roomdetail",
+			"style": {
+				"navigationBarTitleText": "房间详情"
+			}
 		}
 	],
 	"globalStyle": {
