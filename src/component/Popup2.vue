@@ -5,19 +5,19 @@
 				<view class="title textcenter" style="color:black;padding:10px">{{title}}</view>
     	  <view class="main">
     	  	<label style="width:20vw">设备名</label>
-    	  	<input confirmtype="text" placeholder="请输入设备名" v-model="value">
+    	  	<input confirmtype="text" placeholder="请输入设备名" v-model="transvalue.equipName ">
     	  </view>   
 				<view class="main">
     	  	<label style="width:20vw">选择类别</label>
-    	  	<selected :List="typelist" palceholder="请选择类别"></selected>
+    	  	<selected :List="typelist" @getval="getval">{{transvalue.selectval}}</selected>
     	  </view>  
 				<view class="main">
     	  	<label style="width:20vw">描述</label>
-    	  	<input confirmtype="text" placeholder="请输入描述" v-model="desc">
+    	  	<input confirmtype="text" placeholder="请输入描述" v-model="transvalue.desc">
     	  </view>   
 				<view class="main">
     	  	<label style="width:20vw">图片添加</label>
-    	  	<text class="icon-tianjiatupian iconfont" style="font-size:60px" @tap="uploadimg"></text>
+    	  	<image style="width:60px;height:60px" :src="transvalue.image" @tap="uploadimg"></image>
     	  </view>  
     	  <view class="comfirm"> 
     	  	<view class="inline-block textcenter colorblue" style="width:34vw;" @click="confirm()">确定</view>
@@ -42,8 +42,12 @@ export default {
     	return{
       	isshow:false,
 				isconfirm:false,
-				desc:'',
-				value:"",
+				transvalue:{
+					selectval:"请选择类别",
+					image:"../static/image/addimg.png",
+					desc:'',
+					equipName:"",
+				},
 				typelist:[
         {value:"选项一",id:1},
         {value:"选项二",id:2},
@@ -53,10 +57,14 @@ export default {
       ],
 				type:"请选择类别"
       }
-    },
+		},
     methods:{
+				getval(e){
+					console.log(e)
+					this.transvalue.selectval = e.value
+				},
         confirm(){
-            this.$emit("confirm",this.value)
+            this.$emit("confirm",this.transvalue)
         },
          cancel(){
             this.$emit("cancel")
@@ -64,16 +72,24 @@ export default {
 				uploadimg(){
 					uni.chooseImage({
 						success: (chooseImageRes) => {
+							console.log(chooseImageRes)
 							const tempFilePaths = chooseImageRes.tempFilePaths;
 							uni.uploadFile({
 								url: 'http://localhost:3000/room/upload', //仅为示例，非真实的接口地址
 								filePath: tempFilePaths[0],
-								name: 'file',
-								formData: {
-									'user': 'test'
-								},
+								name: 'img',
+								// formData: {
+								// 	'img': 'test'
+								// },
 								success: (uploadFileRes) => {
-									console.log(uploadFileRes.data);
+									console.log(uploadFileRes.data,"success");
+									let imgpath = uploadFileRes.data
+									let getimgpath = imgpath.split("\\").join("/")
+									console.log(getimgpath)
+									this.transvalue.image = this.$basepath + "/" + getimgpath
+								},
+								fail:(err)=>{
+									console.log(err,"err")
 								}
 							});
 						}

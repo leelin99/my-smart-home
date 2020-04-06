@@ -2,7 +2,7 @@
   <div class="hello">
     <div class="prop">
       <div style="border:1px #3DB6A4 solid;padding:5px" align="left" @click="isshow=!isshow">
-        <span>{{placeholder}}</span>
+        <slot></slot>
         <div align="right" class="arrow" :class="[isshow?arrow1:arrow2]"></div>
       </div>
       <transition name="show">
@@ -23,10 +23,9 @@ export default {
         type:Array,
         default:[]
     },
-     placeholder:{
-        type:Array,
+    placedata:{
         default:"请选择"
-    },
+    }
   },
   data(){
     return{
@@ -37,7 +36,7 @@ export default {
   },
   methods:{
     selected(e){
-      this.placeholder = e.value
+      this.$emit("getval",e)
       this.isshow = false
     }
   }

@@ -38,6 +38,9 @@ background-color: #efeff4;
     position:absolute;
     right:20px
 }
+.bottom20{
+	bottom:20px
+}
 .fontsize30{
     font-size: 40rpx;
 }

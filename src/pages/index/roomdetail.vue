@@ -11,13 +11,12 @@
 		<view class="aui-news-box" style="margin-top:50px">
 			<a href="javascript:;" class="aui-news-item" v-for="(list, i) in lists" :key="i">
 				<div class="aui-news-item-hd">
-					<img :src="list.img" alt="">
+					<img :src="list.image" alt="">
 				</div>
 				<div class="aui-news-item-bd">
-					<h4>{{list.tit1}}</h4>
-					<p>{{list.tit2}}</p>
+					<h4>{{list.equipName}}</h4>
+					<p>{{list.desc}}</p>
 				</div>
-				<span class="aui-news-item-fr">{{list.time}}</span>
 			</a>
 		</view>
         <view class="flexcenter" style="position:fixed;left:0;top:0;height:100vh" v-if="isshow">
@@ -27,6 +26,7 @@
 			@cancel="cancel"
 			></Popup>
 		</view>
+		<div style="color:red;left:50%;transform:translateX(-50%)" class="center absolute bottom20">删除房间</div>
 	</view>
 </template>
 
@@ -43,38 +43,7 @@
                 isshow:false,
                 roomName:"",
                 typelist:['选项1'],
-				lists: [
-					{
-						"tit1": "服务通知",
-						"tit2": "恭喜你参加的拼团已组成成功了，请您等待卖家发货",
-						"time": "08:48",
-						"img": '../../static/icon-item-001.png'
-					},
-					{
-						"tit1": "优惠促销",
-						"tit2": "恭喜你参加的拼团已组成成功了，请您等待卖家发货",
-						"time": "08:48",
-						"img": '../../static/icon-item-002.png'
-					},
-					{
-						"tit1": "账户通知",
-						"tit2": "恭喜你参加的拼团已组成成功了，请您等待卖家发货",
-						"time": "昨天",
-						"img": '../../static/icon-item-003.png'
-					},
-					{
-						"tit1": "互动问答",
-						"tit2": "恭喜你参加的拼团已组成成功了，请您等待卖家发货",
-						"time": "星期六",
-						"img": '../../static/icon-item-004.png'
-					},
-					{
-						"tit1": "物流助手",
-						"tit2": "恭喜你参加的拼团已组成成功了，请您等待卖家发货",
-						"time": "星期六",
-						"img": '../../static/icon-item-005.png'
-					},
-				],
+				lists: [],
 			}
 		},
 		onLoad(option) {
@@ -86,17 +55,10 @@
             console.log(params)
         },
 		methods: {
-            confirm(data){
+            confirm(e){
 		    	this.isshow = false;
-		    	// if(data){
-		    	// 	this.roomList.push({'roomName':data,'equipmentNum':0})
-		    	// 	this.roomlistrequest({
-		    	// 		url:this.$apis.roomlistApi,
-		    	// 		data:{'roomName':data},
-		    	// 		method:"POST",
-		    	// 		success:(result)=>{},
-		    	// 	})	
-		    	// }
+				console.log(e,"e")
+				this.lists.push(e)
 		    },
 		    cancel(){
 		    	this.isshow = false;
