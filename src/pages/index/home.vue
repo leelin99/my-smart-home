@@ -36,12 +36,11 @@
 				<view class="iconfont icon-jiantou1 absolute arrow" @tap="taproom(item)"></view>
 			</view>
 		</view>
-		<view class="flexcenter">
+		<view class="flexcenter" style="position:fixed;left:0;top:0;height:100vh" v-if="isshow">
 			<Popup 
 			title="添加房间"
 			@confirm="confirm"
 			@cancel="cancel"
-			v-if="isshow"
 			></Popup>
 		</view>
 	</view>
@@ -131,7 +130,7 @@
 		width:100vw;
 		height:200px;
 		opacity: 0.4;
-		position:fixed;
+		position:absolute;
 	}
 	
 	.bottomcontent{
@@ -164,7 +163,7 @@
 		height:200px;
 		width:100vw;
 		overflow: hidden;
-		position: fixed;
+		position: absolute;
 	}
 	.home{
 		text-align: left;

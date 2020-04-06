@@ -3,10 +3,10 @@
         <view class="borderTB relative">
             <text class="absolute" style="left:20px">房间名称</text>
             <text class="right">{{roomName}}</text>
-        </view>
+        </view>     
         <view class="relative" style="margin-top:10px">
             <text class="absolute" style="left:30px">已有设备</text>
-            <text class="icon-jia iconfont right" style="font-size:20px;color:black"></text>
+            <text class="icon-jia iconfont right" style="font-size:20px;color:black" @click="isshow=true"></text>
         </view>
 		<view class="aui-news-box" style="margin-top:50px">
 			<a href="javascript:;" class="aui-news-item" v-for="(list, i) in lists" :key="i">
@@ -20,20 +20,29 @@
 				<span class="aui-news-item-fr">{{list.time}}</span>
 			</a>
 		</view>
+        <view class="flexcenter" style="position:fixed;left:0;top:0;height:100vh" v-if="isshow">
+			<Popup 
+			title="添加设备"
+			@confirm="confirm"
+			@cancel="cancel"
+			></Popup>
+		</view>
 	</view>
 </template>
 
 <script>
     let params = {}
-    import uniIcons from "../../component/uni-icons"
+    import Popup from "../../component/Popup2"
 	export default {
         components:{
-            uniIcons
+            Popup,
         },
 		data() {
 			return {
                 title: 'Hello',
+                isshow:false,
                 roomName:"",
+                typelist:['选项1'],
 				lists: [
 					{
 						"tit1": "服务通知",
@@ -77,7 +86,21 @@
             console.log(params)
         },
 		methods: {
-
+            confirm(data){
+		    	this.isshow = false;
+		    	// if(data){
+		    	// 	this.roomList.push({'roomName':data,'equipmentNum':0})
+		    	// 	this.roomlistrequest({
+		    	// 		url:this.$apis.roomlistApi,
+		    	// 		data:{'roomName':data},
+		    	// 		method:"POST",
+		    	// 		success:(result)=>{},
+		    	// 	})	
+		    	// }
+		    },
+		    cancel(){
+		    	this.isshow = false;
+		    },
 		}
 	}
 </script>
