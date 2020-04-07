@@ -41,61 +41,61 @@ export default {
     data(){
     	return{
       	isshow:false,
-				isconfirm:false,
-				transvalue:{
-					selectval:"请选择类别",
-					image:"../static/image/addimg.png",
-					desc:'',
-					equipName:"",
-				},
-				typelist:[
+		isconfirm:false,
+		transvalue:{
+			selectval:"请选择类别",
+			image:"../static/image/addimg.png",
+			desc:'',
+			equipName:"",
+		},
+		typelist:[
         {value:"选项一",id:1},
         {value:"选项二",id:2},
         {value:"选项三",id:3},
         {value:"选项四",id:4},
         {value:"选项五",id:5},
       ],
-				type:"请选择类别"
+		type:"请选择类别"
       }
 		},
     methods:{
-				getval(e){
-					console.log(e)
-					this.transvalue.selectval = e.value
-				},
-        confirm(){
-            this.$emit("confirm",this.transvalue)
-        },
-         cancel(){
-            this.$emit("cancel")
-				},
-				uploadimg(){
-					uni.chooseImage({
-						success: (chooseImageRes) => {
-							console.log(chooseImageRes)
-							const tempFilePaths = chooseImageRes.tempFilePaths;
-							uni.uploadFile({
-								url: 'http://localhost:3000/room/upload', //仅为示例，非真实的接口地址
-								filePath: tempFilePaths[0],
-								name: 'img',
-								// formData: {
-								// 	'img': 'test'
-								// },
-								success: (uploadFileRes) => {
-									console.log(uploadFileRes.data,"success");
-									let imgpath = uploadFileRes.data
-									let getimgpath = imgpath.split("\\").join("/")
-									console.log(getimgpath)
-									this.transvalue.image = this.$basepath + "/" + getimgpath
-								},
-								fail:(err)=>{
-									console.log(err,"err")
-								}
-							});
+		getval(e){
+		console.log(e)
+		this.transvalue.selectval = e.value
+		},
+    confirm(){
+        this.$emit("confirm",this.transvalue)
+    },
+     cancel(){
+        this.$emit("cancel")
+		},
+		uploadimg(){
+			uni.chooseImage({
+				success: (chooseImageRes) => {
+					console.log(chooseImageRes)
+					const tempFilePaths = chooseImageRes.tempFilePaths;
+					uni.uploadFile({
+						url: this.$apis.uploadApi,
+						filePath: tempFilePaths[0],
+						name: 'img',
+						// formData: {
+						// 	'img': 'test'
+						// },
+						success: (uploadFileRes) => {
+							console.log(uploadFileRes.data,"success");
+							let imgpath = uploadFileRes.data
+							let getimgpath = imgpath.split("\\").join("/")
+							console.log(getimgpath)
+							this.transvalue.image = this.$basepath + "/" + getimgpath
+						},
+						fail:(err)=>{
+							console.log(err,"err")
 						}
 					});
 				}
-    }
+			});
+		}
+  }
 }
 </script>
 

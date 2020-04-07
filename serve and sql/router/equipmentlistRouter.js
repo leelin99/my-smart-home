@@ -1,30 +1,33 @@
 const express = require("express")
 const router = express.Router()
-const roommodel = require("../db/model/roommodel")
+const equipmentModel = require("../db/model/equipmentModel")
 /**
- * @api {post} /room/roomlist 房间信息表
- * @apiVersion 0.0.1
- * @apiName 获得房间信息
+ * @api {post} /room/equipmentlist 设备信息表
+  * @apiVersion 0.0.1
+ * @apiName 获得设备信息
  * @apiGroup 房间信息
  *
- * @apiParam {String} roomName 房间名字*
+ * @apiParam {String} equipName 设备名字*
+ * @apiParam {String} seleVal 设备种类*
+ * @apiParam {String} iamge 设备图片
+ * @apiParam {String} desc 设备描述
  *
- * @apiSuccess {Array} inf 房间列表
+ * @apiSuccess {Array} inf 设备信息
  */
-router.post("/roomlist",(req,res)=>{
-    console.log(req.body.roomName)
-    if(req.body.roomName){
-        const {roomName} = req.body
-        roommodel.find({roomName})
+router.post("/equipmentlist",(req,res)=>{
+    console.log(req.body)
+    if(req.body.equipName && req.body.seleVal){
+        const {equipName,seleVal,iamge,desc} = req.body
+        equipmentModel.find({equipName})
         .then(data => {
             if(data.length > 0){
                 res.send({
                     inf:data,
                     err:0,
-                    meg:"房间已存在" 
+                    meg:"设备已存在" 
                 })
             }else{
-                roommodel.insertMany({roomName,equipmentNum:0})
+                equipmentModel.insertMany({equipName,seleVal,iamge,desc})
                 .then(data => {
                     res.send({
                         inf:data,
@@ -42,7 +45,7 @@ router.post("/roomlist",(req,res)=>{
             }
         })
     }else{
-    roommodel.find()
+    equipmentModel.find()
         .then(data => {
             res.send({
                 inf:data,

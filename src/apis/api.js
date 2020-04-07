@@ -4,6 +4,8 @@ const room = baseurl + "/room"
 
 const api = {
     LoginApi: user + "/login" ,// 登录接口
-    roomlistApi: room + "/roomlist"// 房间列表接口
+    roomlistApi: room + "/roomlist",// 房间列表接口
+    equipApi:room + "/equipmentlist",//设备信息表
+    uploadApi:room + '/upload',//图片上传
 }
 export default api;

@@ -1,0 +1,7 @@
+{
+    "name": "接口文档",
+    "version": "0.1.0",
+    "description": "接口文档",
+    "title": "Custom apiDoc browser title",
+    "url" : "https://localhost:3000"
+  }

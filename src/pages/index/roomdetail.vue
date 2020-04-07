@@ -44,21 +44,54 @@
                 roomName:"",
                 typelist:['选项1'],
 				lists: [],
+				equipInf:{},
 			}
 		},
 		onLoad(option) {
             // let curpage = getCurPage()
-            params = option
+			params = option
+			this.equipList()
         },
         onReady(){
             this.roomName = params.roomname
             console.log(params)
         },
 		methods: {
+			equipList(){
+				uni.request({
+					url: this.$apis.equipApi, //仅为示例，并非真实接口地址。
+					data: this.equipInf,
+					method:"POST",
+					header: {
+						'custom-header': 'hello' //自定义请求头信息
+					},
+					success: (res) => {
+						console.log(res.data);
+						// this.text = 'request success';
+					}
+				});
+			},
             confirm(e){
-		    	this.isshow = false;
-				console.log(e,"e")
-				this.lists.push(e)
+				this.equipInf = e
+				if(e.equipName && e.selectval != "请选择类别"){
+					this.isshow = false;
+					console.log(e,"e")
+					this.lists.push(e)
+				}else{
+					if(!e.equipName ){
+						wx.showToast({
+						title: '请输入设备名',
+						icon:"warn",
+						duration: 2000
+						})
+					}else if(e.selectval == "请选择类别"){
+						wx.showToast({
+						title: '请选择类别',
+						icon:"warn",
+						duration: 2000
+						})
+					}
+				}
 		    },
 		    cancel(){
 		    	this.isshow = false;

@@ -6,6 +6,7 @@ const db = require("./db/connect")
 const path = require("path")
 const port = 3000
 const roomrouter = require("./router/roomlistRouter")
+const equipmentRouter = require("./router/equipmentlistRouter")
 const uploadRouter = require("./router/uploadRouter")
 const roommodel = require("./db/model/roommodel")
 app.listen(port,() => {
@@ -17,3 +18,4 @@ app.use(bodyParser.json())
 app.use("/public",express.static(path.join(__dirname,"public")))
 app.use("/room",roomrouter)
 app.use("/room",uploadRouter)
+app.use("/room",equipmentRouter)
