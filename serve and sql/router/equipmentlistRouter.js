@@ -1,6 +1,6 @@
 const express = require("express")
 const router = express.Router()
-const equipmentModel = require("../db/model/equipmentModel")
+const roommodel = require("../db/model/roommodel")
 /**
  * @api {post} /room/equipmentlist 设备信息表
   * @apiVersion 0.0.1
@@ -15,51 +15,11 @@ const equipmentModel = require("../db/model/equipmentModel")
  * @apiSuccess {Array} inf 设备信息
  */
 router.post("/equipmentlist",(req,res)=>{
-    console.log(req.body)
     if(req.body.equipName && req.body.seleVal){
-        const {equipName,seleVal,iamge,desc} = req.body
-        equipmentModel.find({equipName})
-        .then(data => {
-            if(data.length > 0){
-                res.send({
-                    inf:data,
-                    err:0,
-                    meg:"设备已存在" 
-                })
-            }else{
-                equipmentModel.insertMany({equipName,seleVal,iamge,desc})
-                .then(data => {
-                    res.send({
-                        inf:data,
-                        err:0,
-                        meg:"添加成功" 
-                    })
-                 }) 
-                 .catch(err => {
-                    res.send({
-                        inf:err,
-                        err:0,
-                        meg:"添加失败" 
-                    })
-                 })
-            }
-        })
-    }else{
-    equipmentModel.find()
-        .then(data => {
-            res.send({
-                inf:data,
-                err:0,
-                meg:"返回成功"
-            })
-        })
-        .catch( err => {
-            res.send({
-                inf:"",
-                err:0,
-                meg:err
-            })
-        })    
+        const {_id,equipName,seleVal,image,desc} = req.body
+        console.log(_id)
+        let children = [{equipName,seleVal,image,desc}]
+        roommodel.updateone({_id},children)
     }
 })
 module.exports = router

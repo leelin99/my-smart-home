@@ -107,7 +107,7 @@
 			// 房间跳转路由
 			taproom(e){
 				uni.navigateTo({
-                    url: './roomdetail?roomname='+e.roomName,
+                    url: './roomdetail?roomname='+e.roomName + "&_id=" + e._id,
                     success: res => {},
                     fail: () => {},
                     complete: () => {}

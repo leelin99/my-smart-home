@@ -9,7 +9,7 @@
     	  </view>   
 				<view class="main">
     	  	<label style="width:20vw">选择类别</label>
-    	  	<selected :List="typelist" @getval="getval">{{transvalue.selectval}}</selected>
+    	  	<selected :List="typelist" @getval="getval">{{transvalue.seleVal}}</selected>
     	  </view>  
 				<view class="main">
     	  	<label style="width:20vw">描述</label>
@@ -43,17 +43,17 @@ export default {
       	isshow:false,
 		isconfirm:false,
 		transvalue:{
-			selectval:"请选择类别",
+			seleVal:"请选择类别",
 			image:"../static/image/addimg.png",
 			desc:'',
 			equipName:"",
 		},
 		typelist:[
-        {value:"选项一",id:1},
-        {value:"选项二",id:2},
-        {value:"选项三",id:3},
-        {value:"选项四",id:4},
-        {value:"选项五",id:5},
+        {value:"智能空调",id:1},
+        {value:"智能电灯",id:2},
+        {value:"智能门锁",id:3},
+        {value:"智能音响",id:4},
+        {value:"智能热水器",id:5},
       ],
 		type:"请选择类别"
       }
@@ -61,7 +61,7 @@ export default {
     methods:{
 		getval(e){
 		console.log(e)
-		this.transvalue.selectval = e.value
+		this.transvalue.seleVal = e.value
 		},
     confirm(){
         this.$emit("confirm",this.transvalue)

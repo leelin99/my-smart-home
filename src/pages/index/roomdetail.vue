@@ -53,13 +53,15 @@
 			this.equipList()
         },
         onReady(){
-            this.roomName = params.roomname
-            console.log(params)
+			this.roomName = params.roomname
+			this._id = params._id
+            console.log(params,"params")
         },
 		methods: {
 			equipList(){
+				this.equipInf._id = this._id
 				uni.request({
-					url: this.$apis.equipApi, //仅为示例，并非真实接口地址。
+					url: this.$apis.equipApi,
 					data: this.equipInf,
 					method:"POST",
 					header: {
@@ -67,16 +69,20 @@
 					},
 					success: (res) => {
 						console.log(res.data);
+						if(res.data.inf){
+							this.lists = res.data.inf
+						}
 						// this.text = 'request success';
 					}
 				});
 			},
             confirm(e){
 				this.equipInf = e
-				if(e.equipName && e.selectval != "请选择类别"){
+				if(e.equipName && e.seleVal != "请选择类别"){
 					this.isshow = false;
 					console.log(e,"e")
 					this.lists.push(e)
+					this.equipList()
 				}else{
 					if(!e.equipName ){
 						wx.showToast({
@@ -84,7 +90,7 @@
 						icon:"warn",
 						duration: 2000
 						})
-					}else if(e.selectval == "请选择类别"){
+					}else if(e.seleVal == "请选择类别"){
 						wx.showToast({
 						title: '请选择类别',
 						icon:"warn",

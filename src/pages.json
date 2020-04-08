@@ -1,16 +1,22 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-			"path": "pages/index/roomdetail",
+			"path": "pages/controlPage/AirConditioner",
 			"style": {
 				"navigationBarTitleText": "首页"
 			}
 		},{
-			"path": "pages/index/home",
+			"path": "pages/index/roomdetail",
 			"style": {
 				"navigationBarTitleText": "房间详情"
 			}
+		},{
+			"path": "pages/index/home",
+			"style": {
+				"navigationBarTitleText": "空调遥控器"
+			}
 		}
+		
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
