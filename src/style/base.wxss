@@ -69,3 +69,7 @@ background-color: #efeff4;
 	width: 100vw;
 	height: 50vh;
 }
+.circle{
+  border:1px solid black;
+  border-radius:50%;
+}
