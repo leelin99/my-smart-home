@@ -45,7 +45,7 @@ export default {
 		transvalue:{
 			seleVal:"请选择类别",
 			image:"../static/image/addimg.png",
-			desc:'',
+			desc:"",
 			equipName:"",
 		},
 		typelist:[
@@ -64,6 +64,9 @@ export default {
 		this.transvalue.seleVal = e.value
 		},
     confirm(){
+		if(this.transvalue.image === "../static/image/addimg.png"){
+			this.transvalue.image = ""
+		}
         this.$emit("confirm",this.transvalue)
     },
      cancel(){

@@ -65,16 +65,19 @@
 			}
 		},
 		onReady(){
+			console.log("sss")
 			this.roomlistrequest({
 				url:this.$apis.roomlistApi,
 				data:{},
 				method:"POST",
 				success:(result)=>{
+					console.log(result)
 					this.roomList = [...result.data.inf]
 				},
 			})
 		},
 		methods: {
+			
 			//房间列表接口请求
 			roomlistrequest(req){
 				wx.request({
@@ -107,7 +110,7 @@
 			// 房间跳转路由
 			taproom(e){
 				uni.navigateTo({
-                    url: './roomdetail?roomname='+e.roomName + "&_id=" + e._id,
+                    url: './roomdetail?roomname='+e.roomName,
                     success: res => {},
                     fail: () => {},
                     complete: () => {}

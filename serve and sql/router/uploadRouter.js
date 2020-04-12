@@ -2,7 +2,6 @@ const express = require("express")
 const router = express.Router()
 const multer = require("multer")
 const formidable = require('formidable')
-const roommodel = require("../db/model/roommodel")
 /**
  * @api {post} /room/upload 图片上传
 * @apiVersion 0.0.1

@@ -10,9 +10,9 @@
         </view>
 		<view class="aui-news-box" style="margin-top:50px">
 			<a href="javascript:;" class="aui-news-item" v-for="(list, i) in lists" :key="i">
-				<div class="aui-news-item-hd">
-					<img :src="list.image" alt="">
-				</div>
+				<view class="aui-news-item-hd">
+					<img :src="list.image?list.image:'../../static/image/control.png'" alt="">
+				</view>
 				<div class="aui-news-item-bd">
 					<h4>{{list.equipName}}</h4>
 					<p>{{list.desc}}</p>
@@ -26,7 +26,7 @@
 			@cancel="cancel"
 			></Popup>
 		</view>
-		<div style="color:red;left:50%;transform:translateX(-50%)" class="center absolute bottom20">删除房间</div>
+		<div style="color:red;left:50%;transform:translateX(-50%)" class="center absolute bottom20" @tap="del">删除房间</div>
 	</view>
 </template>
 
@@ -50,16 +50,37 @@
 		onLoad(option) {
             // let curpage = getCurPage()
 			params = option
-			this.equipList()
         },
         onReady(){
-			this.roomName = params.roomname
-			this._id = params._id
-            console.log(params,"params")
+			this.equipList()
+			console.log(params,"params")
         },
 		methods: {
+			// 数据删除
+			delRoom(param){
+				uni.request({
+					url: this.$apis.delRoomApi,
+					data: {name:param},
+					method:"POST",
+					header: {
+						'custom-header': 'hello' //自定义请求头信息
+					},
+					success: (res) => {
+						console.log(res.data);
+						const pages = getCurrentPages();
+						const beforePage = pages[pages.length - 2]
+						console.log(beforePage)
+						wx.navigateBack({
+							success: function() {
+							    console.log(beforePage.onReady)
+							}
+						});
+					}
+				});
+			},
+			// 列表添加和更新
 			equipList(){
-				this.equipInf._id = this._id
+				this.equipInf.name = params.roomname
 				uni.request({
 					url: this.$apis.equipApi,
 					data: this.equipInf,
@@ -68,19 +89,21 @@
 						'custom-header': 'hello' //自定义请求头信息
 					},
 					success: (res) => {
-						console.log(res.data);
+						console.log(res.data,"res");
 						if(res.data.inf){
 							this.lists = res.data.inf
 						}
-						// this.text = 'request success';
 					}
 				});
 			},
+			del(){
+			  this.delRoom(params.roomname)	
+			},
             confirm(e){
 				this.equipInf = e
+				console.log(this.equipInf,e,"eeee")
 				if(e.equipName && e.seleVal != "请选择类别"){
 					this.isshow = false;
-					console.log(e,"e")
 					this.lists.push(e)
 					this.equipList()
 				}else{

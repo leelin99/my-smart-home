@@ -7,5 +7,6 @@ const api = {
     roomlistApi: room + "/roomlist",// 房间列表接口
     equipApi:room + "/equipmentlist",//设备信息表
     uploadApi:room + '/upload',//图片上传
+    delRoomApi:room + '/delRoom',//删除房间
 }
 export default api;
