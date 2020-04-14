@@ -6,17 +6,15 @@
         :value="switchVal"
         @change="changeSwitch"
       ></mSwitch>
-      <view style="position:absolute;top:10%;left:50%;transform:translateX(-50%)">空调</view>
-      <view style="position:absolute;top:15%;left:50%;transform:translateX(-50%)">室外 室内</view>
-      <view
-        style="position:absolute;top:30%;left:50%;transform:translateX(-45%);font-size:85px"
-      >{{temperature}}°</view>
-      <view style="position:absolute;top:60%;left:50%;transform:translateX(-50%)">制冷运行风速自动风</view>
-      <view
-        style="position:absolute;top:65%;left:50%;transform:translateX(-50%)" v-show="istime">定时:{{time[index]}}关闭</view>
+      <view style="position:absolute;top:10%;left:50%;transform:translateX(-50%)">音响</view>
+      <view style="position:absolute;top:30%;left:50%;transform:translateX(-45%);font-size:20px">当前模式：{{curMode}}</view>
+      <view style="position:absolute;top:40%;left:50%;transform:translateX(-50%)">{{curMusic}}</view>
+      <view style="position:absolute;top:50%;left:50%;transform:translateX(-50%)">{{singer}}</view>
+      <view style="position:absolute;top:60%;left:50%;transform:translateX(-50%)">{{desc}}</view>
       <view style="position:absolute;top:70%;left:50%;transform:translateX(-50%)">
-        <text style="font-size:80px;margin-right:20px" @tap="temperature++">+</text>
-        <text style="font-size:80px;margin-left:20px" @tap="temperature--">-</text>
+        <text style="font-size:50px;margin-right:20px" @tap="temperature++">←</text>
+        <text style="font-size:50px" @tap="temperature--">||</text>
+        <text style="font-size:50px;margin-left:20px" @tap="temperature--">→</text>
       </view>
     </header>
     <nav class="nav">
@@ -52,7 +50,11 @@ export default {
   },
   data() {
     return {
-			istime:false,
+      curMusic:"曲名",
+      singer:"歌手",
+      desc:"描述",
+      istime:false,
+      curMode:"播放音乐",
       index: 0,
       value: "30分钟",
       time: [
@@ -71,18 +73,14 @@ export default {
       //   uni.getSystemInfoSync().screenWidth / (750 / 100)
       // )}px;width:100vw`,
       switchVal: false,
-      blue: "#00A3F8",
+      blue: "#009495",
       gray: "gray",
       temperature: 17,
       Lists: [
-        { Name: "模式", icon: "icon-moshiqiehuan", isclick: 0 },
-        { Name: "上下风", icon: "icon-feng", isclick: 0 },
-        { Name: "风速", icon: "icon-wind-speed-high", isclick: 0 },
-        { Name: "左右风", icon: "icon-air-movement", isclick: 0 },
-        { Name: "净化", icon: "icon-jinghua", isclick: 0 },
-        { Name: "定时", icon: "icon-timer", isclick: 0, disabled: true },
-        { Name: "电辅热", icon: "icon-re", isclick: 0 },
-        { Name: "干燥", icon: "icon-ganzao", isclick: 0 }
+        { Name: "儿童模式", icon: "icon-ertong", isclick: 0 },
+        { Name: "歌曲曲目", icon: "icon-huanyuangequxinxi", isclick: 0 },
+        { Name: "模式选取", icon: "icon-iconfontmoshi", isclick: 0 },
+        { Name: "有声读物", icon: "icon-yinleduwu", isclick: 0 },
       ]
     };
   },

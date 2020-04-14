@@ -6,17 +6,17 @@
         :value="switchVal"
         @change="changeSwitch"
       ></mSwitch>
-      <view style="position:absolute;top:10%;left:50%;transform:translateX(-50%)">空调</view>
-      <view style="position:absolute;top:15%;left:50%;transform:translateX(-50%)">室外 室内</view>
+      <view style="position:absolute;top:10%;left:50%;transform:translateX(-50%)">热水器</view>
       <view
         style="position:absolute;top:30%;left:50%;transform:translateX(-45%);font-size:85px"
       >{{temperature}}°</view>
-      <view style="position:absolute;top:60%;left:50%;transform:translateX(-50%)">制冷运行风速自动风</view>
+      <view style="position:absolute;top:60%;left:50%;transform:translateX(-50%)">设置温度：{{status}}</view>
+      <view style="position:absolute;top:65%;left:50%;transform:translateX(-50%)">实际温度:{{actTemp}}°  热水量:{{waterNum}}%</view>
       <view
-        style="position:absolute;top:65%;left:50%;transform:translateX(-50%)" v-show="istime">定时:{{time[index]}}关闭</view>
+        style="position:absolute;top:75%;left:50%;transform:translateX(-50%)" v-show="istime">定时:{{time[index]}}关闭</view>
       <view style="position:absolute;top:70%;left:50%;transform:translateX(-50%)">
-        <text style="font-size:80px;margin-right:20px" @tap="temperature++">+</text>
-        <text style="font-size:80px;margin-left:20px" @tap="temperature--">-</text>
+        <text style="font-size:80px;margin-right:20px" @tap="temperature--">-</text>
+        <text style="font-size:80px;margin-left:20px" @tap="temperature++">+</text>
       </view>
     </header>
     <nav class="nav">
@@ -52,37 +52,28 @@ export default {
   },
   data() {
     return {
+      status:"加热中",
+      actTemp:"75",
+      waterNum:"100",
 			istime:false,
       index: 0,
       value: "30分钟",
-      time: [
-        "30分钟",
-        "1小时",
-        "2小时",
-        "3小时",
-        "4小时",
-        "5小时",
-        "6小时",
-        "7小时",
-        "8小时"
-      ],
+      time: [],
       visible: true,
       // indicatorStyle: `height: ${Math.round(
       //   uni.getSystemInfoSync().screenWidth / (750 / 100)
       // )}px;width:100vw`,
       switchVal: false,
-      blue: "#00A3F8",
+      blue: "#FF6666",
       gray: "gray",
       temperature: 17,
       Lists: [
-        { Name: "模式", icon: "icon-moshiqiehuan", isclick: 0 },
-        { Name: "上下风", icon: "icon-feng", isclick: 0 },
-        { Name: "风速", icon: "icon-wind-speed-high", isclick: 0 },
-        { Name: "左右风", icon: "icon-air-movement", isclick: 0 },
-        { Name: "净化", icon: "icon-jinghua", isclick: 0 },
-        { Name: "定时", icon: "icon-timer", isclick: 0, disabled: true },
-        { Name: "电辅热", icon: "icon-re", isclick: 0 },
-        { Name: "干燥", icon: "icon-ganzao", isclick: 0 }
+        { Name: "e+增容", icon: "icon-fenyuzengrong", isclick: 0 },
+        { Name: "云管家", icon: "icon-yunguanjia", isclick: 0 },
+        { Name: "高温抑菌", icon: "icon-yijun", isclick: 0 },
+        { Name: "无电洗", icon: "icon-meidian", isclick: 0 },
+        { Name: "预约", icon: "icon-yuyue", isclick: 0, disabled: true },
+        { Name: "半胆速热", icon: "icon-redu", isclick: 0 },
       ]
     };
   },

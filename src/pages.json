@@ -15,6 +15,26 @@
 			"style": {
 				"navigationBarTitleText": "空调遥控器"
 			}
+		},{
+			"path": "pages/controlPage/Heater",
+			"style": {
+				"navigationBarTitleText": "热水器遥控器"
+			}
+		},{
+			"path": "pages/controlPage/lamp",
+			"style": {
+				"navigationBarTitleText": "电灯遥控器"
+			}
+		},{
+			"path": "pages/controlPage/sound",
+			"style": {
+				"navigationBarTitleText": "音响遥控器"
+			}
+		},{
+			"path": "pages/controlPage/door",
+			"style": {
+				"navigationBarTitleText": "门锁遥控器"
+			}
 		}
 		
 	],

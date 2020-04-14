@@ -6,18 +6,10 @@
         :value="switchVal"
         @change="changeSwitch"
       ></mSwitch>
-      <view style="position:absolute;top:10%;left:50%;transform:translateX(-50%)">空调</view>
-      <view style="position:absolute;top:15%;left:50%;transform:translateX(-50%)">室外 室内</view>
-      <view
-        style="position:absolute;top:30%;left:50%;transform:translateX(-45%);font-size:85px"
-      >{{temperature}}°</view>
-      <view style="position:absolute;top:60%;left:50%;transform:translateX(-50%)">制冷运行风速自动风</view>
-      <view
-        style="position:absolute;top:65%;left:50%;transform:translateX(-50%)" v-show="istime">定时:{{time[index]}}关闭</view>
-      <view style="position:absolute;top:70%;left:50%;transform:translateX(-50%)">
-        <text style="font-size:80px;margin-right:20px" @tap="temperature++">+</text>
-        <text style="font-size:80px;margin-left:20px" @tap="temperature--">-</text>
-      </view>
+      <view style="position:absolute;top:10%;left:50%;transform:translateX(-50%)">门锁</view>
+      <view style="position:absolute;top:30%;left:50%;transform:translateX(-45%);font-size:40px">{{status}}</view>
+      <view style="position:absolute;top:50%;left:50%;transform:translateX(-50%)">摄像头:{{camStatus}}</view>
+            <view style="position:absolute;top:60%;left:50%;transform:translateX(-50%)">语音接受:{{soundStatus}}</view>
     </header>
     <nav class="nav">
       <ul class="flex">
@@ -52,7 +44,10 @@ export default {
   },
   data() {
     return {
-			istime:false,
+      istime:false,
+      status:"关闭中",
+      camStatus:"关闭中",
+      soundStatus:"关闭中",
       index: 0,
       value: "30分钟",
       time: [
@@ -71,18 +66,12 @@ export default {
       //   uni.getSystemInfoSync().screenWidth / (750 / 100)
       // )}px;width:100vw`,
       switchVal: false,
-      blue: "#00A3F8",
+      blue: "#00965E",
       gray: "gray",
-      temperature: 17,
       Lists: [
-        { Name: "模式", icon: "icon-moshiqiehuan", isclick: 0 },
-        { Name: "上下风", icon: "icon-feng", isclick: 0 },
-        { Name: "风速", icon: "icon-wind-speed-high", isclick: 0 },
-        { Name: "左右风", icon: "icon-air-movement", isclick: 0 },
-        { Name: "净化", icon: "icon-jinghua", isclick: 0 },
-        { Name: "定时", icon: "icon-timer", isclick: 0, disabled: true },
-        { Name: "电辅热", icon: "icon-re", isclick: 0 },
-        { Name: "干燥", icon: "icon-ganzao", isclick: 0 }
+        { Name: "密码设置", icon: "icon-mima", isclick: 0 },
+        { Name: "语音设置", icon: "icon-shexiangtou", isclick: 0 },
+        { Name: "摄像头", icon: "icon-yuyin", isclick: 0 },
       ]
     };
   },
