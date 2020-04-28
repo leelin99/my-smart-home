@@ -20,7 +20,7 @@ export default {
     },
     value: {
       type: Boolean,
-      default: true
+      default: false
     },
     disabled: {
       type: Boolean,
@@ -33,7 +33,6 @@ export default {
   },
   methods: {
     change (e) {
-      // console.log(e.detail.value)
       this.$emit('change', e.detail.value)
       this.$emit('input', e.detail.value)
     }

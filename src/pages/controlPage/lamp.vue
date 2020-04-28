@@ -10,7 +10,7 @@
       <view
         style="position:absolute;top:30%;left:50%;transform:translateX(-45%);font-size:40px"
       >{{status}}</view>
-      <view style="position:absolute;top:60%;left:50%;transform:translateX(-50%)">当前模式：{{mode}}</view>
+      <view style="position:absolute;top:60%;left:50%;transform:translateX(-50%);width:100vw">当前模式：{{Lists[2].array[mode]}} 亮度：{{Lists[1].array[lightness]}}</view>
     </header>
     <nav class="nav">
       <ul class="flex">
@@ -18,11 +18,11 @@
           <picker
             @change="bindPickerChange"
             :value="index"
-            :range="time"
+            :range="item.array"
             :disabled="!item.disabled"
-						@cancel="canceltime(item)"
+            @cancel="canceltime(item)"
           >
-            <view  class="iconLi">
+            <view class="iconLi">
               <text
                 :class="item.icon"
                 class="iconfont circle icon"
@@ -45,22 +45,12 @@ export default {
   },
   data() {
     return {
-      istime:false,
-      status:"关闭中",
-      mode:"智能模式",
-      index: 0,
+      istime: false,
+      Name: "",
+      status: "关闭中",
+      mode: "",
+      lightness: 5,
       value: "30分钟",
-      time: [
-        "30分钟",
-        "1小时",
-        "2小时",
-        "3小时",
-        "4小时",
-        "5小时",
-        "6小时",
-        "7小时",
-        "8小时"
-      ],
       visible: true,
       // indicatorStyle: `height: ${Math.round(
       //   uni.getSystemInfoSync().screenWidth / (750 / 100)
@@ -70,31 +60,73 @@ export default {
       gray: "gray",
       temperature: 17,
       Lists: [
-        { Name: "颜色调节", icon: "icon-yanse", isclick: 0 },
-        { Name: "模式选择", icon: "icon-iconfontmoshi", isclick: 0 },
+        {
+          Name: "颜色调节",
+          icon: "icon-yanse",
+          isclick: 0,
+          disabled: true,
+          array: ["黄色", "白色", "红色", "青色"]
+        },
+        {
+          Name: "亮度调节",
+          icon: "icon-liangdu-",
+          isclick: 0,
+          disabled: true,
+          array: ["10%", "30%", "50%", "70%", "80%", "90%", "100%"]
+        },
+        {
+          Name: "模式调节",
+          icon: "icon-iconfontmoshi",
+          isclick: 0,
+          disabled: true,
+          array: ["护眼模式", "普通模式", "睡眠模式"]
+        }
       ]
     };
   },
   methods: {
     bindPickerChange: function(e) {
       console.log("picker发送选择改变，携带值为", e.target.value);
-			this.index = e.target.value;
-			this.istime = true;
+      if (this.Name == "颜色调节") {
+        switch (e.target.value) {
+          case 0:
+            this.blue = "yellow";
+            break;
+          case 2:
+            this.blue = "red";
+            break;
+          case 3:
+            this.blue = "lightgreen";
+            break;
+        }
+      } else if (this.Name == "亮度调节") {
+        this.lightness = e.target.value
+      } else {
+        this.mode = e.target.value
+      }
+      this.index = e.target.value;
+      this.istime = true;
     },
     changestatus(item) {
-			if(item.disabled){
-				item.isclick = true
-			}else{
-				item.isclick = !item.isclick;
-			}
+      this.Name = item.Name;
+      if (item.disabled) {
+        item.isclick = true;
+      } else {
+        item.isclick = !item.isclick;
+      }
     },
     changeSwitch(e) {
       this.switchVal = e;
-		},
-		canceltime(item){
-			item.isclick = 0;
-			this.istime = false;
-		}
+      if (e) {
+        this.status = "开启中";
+      } else {
+        this.status = "关闭中";
+      }
+    },
+    canceltime(item) {
+      item.isclick = 0;
+      this.istime = false;
+    }
   }
 };
 </script>

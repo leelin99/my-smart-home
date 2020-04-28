@@ -1,5 +1,6 @@
 <template>
   <view>
+    <KXDateTime :data="date" :end="enddate" :start="startdate" @rundata="kxdatetime"></KXDateTime>
     <header class="header" :style="{backgroundColor:switchVal?blue:gray}">
       <mSwitch
         style="position:absolute;top:10%;right:2%;"
@@ -11,12 +12,16 @@
         style="position:absolute;top:30%;left:50%;transform:translateX(-45%);font-size:85px"
       >{{temperature}}°</view>
       <view style="position:absolute;top:60%;left:50%;transform:translateX(-50%)">设置温度：{{status}}</view>
-      <view style="position:absolute;top:65%;left:50%;transform:translateX(-50%)">实际温度:{{actTemp}}°  热水量:{{waterNum}}%</view>
       <view
-        style="position:absolute;top:75%;left:50%;transform:translateX(-50%)" v-show="istime">定时:{{time[index]}}关闭</view>
+        style="position:absolute;top:65%;left:50%;transform:translateX(-50%)"
+      >实际温度:{{actTemp}}° 热水量:{{waterNum}}%</view>
+      <view
+        style="position:absolute;top:75%;left:50%;transform:translateX(-50%)"
+        v-show="istime"
+      >定时:{{time[index]}}关闭</view>
       <view style="position:absolute;top:70%;left:50%;transform:translateX(-50%)">
-        <text style="font-size:80px;margin-right:20px" @tap="temperature--">-</text>
-        <text style="font-size:80px;margin-left:20px" @tap="temperature++">+</text>
+        <text style="font-size:80px;margin-right:20px" @tap="temperature-=5">-</text>
+        <text style="font-size:80px;margin-left:20px" @tap="temperature+=5">+</text>
       </view>
     </header>
     <nav class="nav">
@@ -27,9 +32,9 @@
             :value="index"
             :range="time"
             :disabled="!item.disabled"
-						@cancel="canceltime(item)"
+            @cancel="canceltime(item)"
           >
-            <view  class="iconLi">
+            <view class="iconLi">
               <text
                 :class="item.icon"
                 class="iconfont circle icon"
@@ -46,57 +51,63 @@
 
 <script>
 import mSwitch from "../../component/m-switch";
+import KXDateTime from "../../component/kx-datetime/kx-datetime.vue";
 export default {
   components: {
-    mSwitch
+    mSwitch,
+    KXDateTime
   },
   data() {
     return {
-      status:"加热中",
-      actTemp:"75",
-      waterNum:"100",
-			istime:false,
+      status: "加热中",
+      actTemp: "75",
+      waterNum: "100",
+      istime: false,
       index: 0,
       value: "30分钟",
       time: [],
       visible: true,
-      // indicatorStyle: `height: ${Math.round(
-      //   uni.getSystemInfoSync().screenWidth / (750 / 100)
-      // )}px;width:100vw`,
       switchVal: false,
       blue: "#FF6666",
       gray: "gray",
-      temperature: 17,
+      temperature: 20,
       Lists: [
         { Name: "e+增容", icon: "icon-fenyuzengrong", isclick: 0 },
         { Name: "云管家", icon: "icon-yunguanjia", isclick: 0 },
         { Name: "高温抑菌", icon: "icon-yijun", isclick: 0 },
         { Name: "无电洗", icon: "icon-meidian", isclick: 0 },
         { Name: "预约", icon: "icon-yuyue", isclick: 0, disabled: true },
-        { Name: "半胆速热", icon: "icon-redu", isclick: 0 },
+        { Name: "半胆速热", icon: "icon-redu", isclick: 0 }
       ]
     };
   },
   methods: {
+    kxdatetime(e) {
+      console.log(e)
+      // this.date = e;
+    },
     bindPickerChange: function(e) {
       console.log("picker发送选择改变，携带值为", e.target.value);
-			this.index = e.target.value;
-			this.istime = true;
+      this.index = e.target.value;
+      this.istime = true;
     },
     changestatus(item) {
-			if(item.disabled){
-				item.isclick = true
-			}else{
-				item.isclick = !item.isclick;
-			}
+      if (item.disabled) {
+        item.isclick = true;
+      } else {
+        item.isclick = !item.isclick;
+      }
     },
     changeSwitch(e) {
       this.switchVal = e;
-		},
-		canceltime(item){
-			item.isclick = 0;
-			this.istime = false;
-		}
+    },
+    canceltime(item) {
+      item.isclick = 0;
+      this.istime = false;
+    },
+    selectTimeEvent(e) {
+      console.log(e);
+    }
   }
 };
 </script>

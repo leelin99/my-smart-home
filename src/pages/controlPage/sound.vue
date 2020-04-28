@@ -7,14 +7,16 @@
         @change="changeSwitch"
       ></mSwitch>
       <view style="position:absolute;top:10%;left:50%;transform:translateX(-50%)">音响</view>
-      <view style="position:absolute;top:30%;left:50%;transform:translateX(-45%);font-size:20px">当前模式：{{curMode}}</view>
-      <view style="position:absolute;top:40%;left:50%;transform:translateX(-50%)">{{curMusic}}</view>
-      <view style="position:absolute;top:50%;left:50%;transform:translateX(-50%)">{{singer}}</view>
-      <view style="position:absolute;top:60%;left:50%;transform:translateX(-50%)">{{desc}}</view>
+      <view
+        style="position:absolute;top:30%;left:50%;transform:translateX(-45%);font-size:20px"
+      >当前模式：{{Lists[0].isclick?"儿童模式":Lists[2].array[index]}}</view>
+      <view style="position:absolute;top:40%;left:50%;transform:translateX(-50%);width:100vw">曲名:{{curMusic}}</view>
+      <view style="position:absolute;top:50%;left:50%;transform:translateX(-50%);width:100vw">歌手：{{singer}}</view>
+      <view style="position:absolute;top:60%;left:50%;transform:translateX(-50%);width:100vw">描述：{{desc}}</view>
       <view style="position:absolute;top:70%;left:50%;transform:translateX(-50%)">
-        <text style="font-size:50px;margin-right:20px" @tap="temperature++">←</text>
-        <text style="font-size:50px" @tap="temperature--">||</text>
-        <text style="font-size:50px;margin-left:20px" @tap="temperature--">→</text>
+        <text style="font-size:50px;margin-right:20px" @tap="before" class="iconfont icon-shangyishou"></text>
+        <text style="font-size:50px" @tap="isStop=!isStop" :class="isStop?'icon-zanting':'icon-icon_play'" class="iconfont"></text>
+        <text style="font-size:50px;margin-left:20px" class="iconfont icon-kuaijin" @tap="next"></text>
       </view>
     </header>
     <nav class="nav">
@@ -23,11 +25,11 @@
           <picker
             @change="bindPickerChange"
             :value="index"
-            :range="time"
+            :range="item.array"
             :disabled="!item.disabled"
-						@cancel="canceltime(item)"
+            @cancel="canceltime(item)"
           >
-            <view  class="iconLi">
+            <view class="iconLi">
               <text
                 :class="item.icon"
                 class="iconfont circle icon"
@@ -50,24 +52,12 @@ export default {
   },
   data() {
     return {
-      curMusic:"曲名",
-      singer:"歌手",
-      desc:"描述",
-      istime:false,
-      curMode:"播放音乐",
+      curMusic: "曲名",
+      singer: "歌手",
+      desc: "描述",
+      istime: false,
+      curMode: "播放音乐",
       index: 0,
-      value: "30分钟",
-      time: [
-        "30分钟",
-        "1小时",
-        "2小时",
-        "3小时",
-        "4小时",
-        "5小时",
-        "6小时",
-        "7小时",
-        "8小时"
-      ],
       visible: true,
       // indicatorStyle: `height: ${Math.round(
       //   uni.getSystemInfoSync().screenWidth / (750 / 100)
@@ -75,35 +65,41 @@ export default {
       switchVal: false,
       blue: "#009495",
       gray: "gray",
-      temperature: 17,
+      isStop:true,
       Lists: [
         { Name: "儿童模式", icon: "icon-ertong", isclick: 0 },
         { Name: "歌曲曲目", icon: "icon-huanyuangequxinxi", isclick: 0 },
-        { Name: "模式选取", icon: "icon-iconfontmoshi", isclick: 0 },
-        { Name: "有声读物", icon: "icon-yinleduwu", isclick: 0 },
+        {
+          Name: "模式选取",
+          icon: "icon-iconfontmoshi",
+          isclick: 0,
+          disabled: true,
+          array: ["播放音乐", "收音机","智能助手"]
+        },
+        { Name: "有声读物", icon: "icon-yinleduwu", isclick: 0 }
       ]
     };
   },
   methods: {
     bindPickerChange: function(e) {
       console.log("picker发送选择改变，携带值为", e.target.value);
-			this.index = e.target.value;
-			this.istime = true;
+      this.index = e.target.value;
+      this.istime = true;
     },
     changestatus(item) {
-			if(item.disabled){
-				item.isclick = true
-			}else{
-				item.isclick = !item.isclick;
-			}
+      if (item.disabled) {
+        item.isclick = true;
+      } else {
+        item.isclick = !item.isclick;
+      }
     },
     changeSwitch(e) {
       this.switchVal = e;
-		},
-		canceltime(item){
-			item.isclick = 0;
-			this.istime = false;
-		}
+    },
+    canceltime(item) {
+      item.isclick = 0;
+      this.istime = false;
+    },
   }
 };
 </script>

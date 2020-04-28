@@ -1,15 +1,24 @@
 <template>
   <view>
+    <pay-keyboard :show_key="show_key" @hideFun="hideFun" @getPassword="getPassword" :pas="password"></pay-keyboard>
     <header class="header" :style="{backgroundColor:switchVal?blue:gray}">
       <mSwitch
         style="position:absolute;top:10%;right:2%;"
         :value="switchVal"
+        :disabled="!switchVal"
+        @tap="inputPas"
         @change="changeSwitch"
       ></mSwitch>
       <view style="position:absolute;top:10%;left:50%;transform:translateX(-50%)">门锁</view>
-      <view style="position:absolute;top:30%;left:50%;transform:translateX(-45%);font-size:40px">{{status}}</view>
-      <view style="position:absolute;top:50%;left:50%;transform:translateX(-50%)">摄像头:{{camStatus}}</view>
-            <view style="position:absolute;top:60%;left:50%;transform:translateX(-50%)">语音接受:{{soundStatus}}</view>
+      <view
+        style="position:absolute;top:30%;left:50%;transform:translateX(-45%);font-size:40px"
+      >{{switchVal?"开启中":"关闭中"}}</view>
+      <view
+        style="position:absolute;top:50%;left:50%;transform:translateX(-50%)"
+      >摄像头:{{Lists[1].isclick?"开启中":"关闭中"}}</view>
+      <view
+        style="position:absolute;top:60%;left:50%;transform:translateX(-50%)"
+      >语音接受:{{Lists[2].isclick?"开启中":"关闭中"}}</view>
     </header>
     <nav class="nav">
       <ul class="flex">
@@ -19,9 +28,9 @@
             :value="index"
             :range="time"
             :disabled="!item.disabled"
-						@cancel="canceltime(item)"
+            @cancel="canceltime(item)"
           >
-            <view  class="iconLi">
+            <view class="iconLi">
               <text
                 :class="item.icon"
                 class="iconfont circle icon"
@@ -38,16 +47,21 @@
 
 <script>
 import mSwitch from "../../component/m-switch";
+import payKeyboard from "../../component/keyboard";
 export default {
   components: {
-    mSwitch
+    mSwitch,
+    payKeyboard
   },
   data() {
     return {
-      istime:false,
-      status:"关闭中",
-      camStatus:"关闭中",
-      soundStatus:"关闭中",
+      trueFalse:0,//状态切换标志,0就是关闭转向开启，1就是开启转向关闭
+      show_key: false,
+      password: "",
+      istime: false,
+      status: "关闭中",
+      camStatus: "关闭中",
+      soundStatus: "关闭中",
       index: 0,
       value: "30分钟",
       time: [
@@ -70,31 +84,64 @@ export default {
       gray: "gray",
       Lists: [
         { Name: "密码设置", icon: "icon-mima", isclick: 0 },
-        { Name: "语音设置", icon: "icon-shexiangtou", isclick: 0 },
-        { Name: "摄像头", icon: "icon-yuyin", isclick: 0 },
+        { Name: "语音设置", icon: "icon-yuyin", isclick: 0 },
+        { Name: "摄像头", icon: "icon-shexiangtou", isclick: 0 }
       ]
     };
   },
   methods: {
     bindPickerChange: function(e) {
       console.log("picker发送选择改变，携带值为", e.target.value);
-			this.index = e.target.value;
-			this.istime = true;
+      this.index = e.target.value;
+      this.istime = true;
     },
     changestatus(item) {
-			if(item.disabled){
-				item.isclick = true
-			}else{
-				item.isclick = !item.isclick;
-			}
+      if (item.disabled) {
+        item.isclick = true;
+      } else {
+        item.isclick = !item.isclick;
+      }
     },
     changeSwitch(e) {
-      this.switchVal = e;
-		},
-		canceltime(item){
-			item.isclick = 0;
-			this.istime = false;
-		}
+      this.switchVal = e 
+      setTimeout(() => {
+        this.trueFalse = 0
+      }, 200);
+    },
+    canceltime(item) {
+      item.isclick = 0;
+      this.istime = false;
+    },
+    // 开启密码弹框
+    inputPas() {
+      if (!this.switchVal && this.trueFalse == 0) {
+        this.show_key = true;
+      }
+    },
+    // 关闭密码弹框
+    hideFun() {
+      this.show_key = false;
+    },
+    // 获取密码
+    getPassword(e) {
+      this.password = e.password;
+      if (this.password === "123456") {
+        this.switchVal = true;
+        this.show_key = false;
+        this.password = "";
+        this.trueFalse = 1
+      } else {
+        const _this = this
+        uni.showToast({
+          title: '密码错误,请重新输入',
+          duration: 2000,
+          icon:'none',
+           success() {
+            _this.password = "";
+          }
+        });
+      }
+    }
   }
 };
 </script>

@@ -2,7 +2,7 @@ const express = require("express")
 const cors = require("cors")
 const bodyParser = require("body-parser")
 const app = express()
-
+const axios = require("axios")
 const path = require("path")
 const port = 3000
 const roomRouter = require("./router/roomlistRouter")
@@ -20,3 +20,17 @@ app.use("/room",roomRouter)
 app.use("/room",uploadRouter)
 app.use("/room",equipmentRouter)
 app.use("/room",delectRoomRouter)
+app.get("/weather",(req,res)=>{
+	const {num} = req.query
+	console.log(req.query)
+	axios.get(`http://www.weather.com.cn/data/sk/${num}.html`)
+	.then(success => {
+		res.send({
+			inf:success.data,
+			err:0	
+		})
+	})
+	.catch(err=>{
+		console.log(err)
+	})
+})
