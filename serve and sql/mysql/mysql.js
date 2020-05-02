@@ -12,6 +12,7 @@ const pool = mysql.createPool({
 let exec =(sql,params,callback) => {
     pool.getConnection((err,con) => {
         if(err){
+            console.log(err)
             callback(err,null,null)
         }else{
             if(params === null || params.length === 0){

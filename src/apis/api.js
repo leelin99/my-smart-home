@@ -8,5 +8,6 @@ const api = {
     equipApi:room + "/equipmentlist",//设备信息表
     uploadApi:room + '/upload',//图片上传
     delRoomApi:room + '/delRoom',//删除房间
+    airConditionApi:room + '/airCondition',//空调遥控器
 }
 export default api;

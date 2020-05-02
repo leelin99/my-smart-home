@@ -9,6 +9,7 @@ const roomRouter = require("./router/roomlistRouter")
 const equipmentRouter = require("./router/equipmentlistRouter")
 const uploadRouter = require("./router/uploadRouter")
 const delectRoomRouter = require("./router/delectRoomRouter")
+const airConRouter = require("./router/airConRouter")
 app.listen(port,() => {
 	console.log(`启动服务器，端口号：${port}`)
 })
@@ -20,9 +21,9 @@ app.use("/room",roomRouter)
 app.use("/room",uploadRouter)
 app.use("/room",equipmentRouter)
 app.use("/room",delectRoomRouter)
+app.use("/room",airConRouter)
 app.get("/weather",(req,res)=>{
 	const {num} = req.query
-	console.log(req.query)
 	axios.get(`http://www.weather.com.cn/data/sk/${num}.html`)
 	.then(success => {
 		res.send({

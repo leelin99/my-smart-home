@@ -1,26 +1,26 @@
 <template>
   <view>
-    <header class="header" :style="{backgroundColor:switchVal?blue:gray}">
+    <header class="header" :style="{backgroundColor:airConInfo.changer?blue:gray}">
       <mSwitch
         style="position:absolute;top:10%;right:2%;"
-        :value="switchVal"
+        :value="airConInfo.changer"
         @change="changeSwitch"
       ></mSwitch>
       <view style="position:absolute;top:10%;left:50%;transform:translateX(-50%)">空调</view>
       <view style="position:absolute;top:15%;left:50%;transform:translateX(-50%)">室外：30°C 室内：25°C</view>
       <view
         style="position:absolute;top:30%;left:50%;transform:translateX(-45%);font-size:85px"
-      >{{temperature}}°</view>
+      >{{airConInfo.temperature}}°</view>
       <view
         style="position:absolute;top:60%;left:50%;transform:translateX(-50%);width: 100vw"
-      >{{Lists[0].array[index0]}} 风向：{{Lists[1].isclick?"上下风":Lists[2].isclick?"左右风":"自动风"}} 风速：{{Lists[3].array[index1]}}</view>
+      >{{Lists[0].array[airConInfo.mode]}} 风向：{{Lists[1].isclick?"上下风":Lists[2].isclick?"左右风":"自动风"}} 风速：{{Lists[3].array[airConInfo.speed]}}</view>
       <view
         style="position:absolute;top:65%;left:50%;transform:translateX(-50%)"
         v-show="istime"
-      >定时:{{Lists[5].array[index2]}}关闭</view>
+      >定时:{{Lists[5].array[airConInfo.time]}}关闭</view>
       <view style="position:absolute;top:70%;left:50%;transform:translateX(-50%)">
-        <text style="font-size:80px;margin-right:20px" @tap="temperature++">+</text>
-        <text style="font-size:80px;margin-left:20px" @tap="temperature--">-</text>
+        <text style="font-size:80px;margin-right:20px" @tap="airConInfo.temperature++;getValue()">+</text>
+        <text style="font-size:80px;margin-left:20px" @tap="airConInfo.temperature--;getValue()">-</text>
       </view>
     </header>
     <nav class="nav">
@@ -49,6 +49,7 @@
 </template>
 
 <script>
+let params = {};
 import mSwitch from "../../component/m-switch";
 export default {
   components: {
@@ -56,16 +57,26 @@ export default {
   },
   data() {
     return {
-      Name:"g",
+      Name: "g",
       istime: false,
-      index0: 0, //判断模式的参数
-      index1: 0, //判断风速的参数
-      index2: 0, //判断定时的参数
       value: "30分钟",
       visible: true,
-      switchVal: false,
       blue: "#00A3F8",
       gray: "gray",
+      airConInfo: {
+        temperature: 0,
+        mode: 0,
+        sxfeng: 0,
+        zyfeng: 0,
+        speed: 0,
+        clear: 0,
+        time: 0,
+        heat: 0,
+        dry: 0,
+        name: "",
+        equipName: "",
+        changer: 0
+      },
       temperature: 17,
       Lists: [
         {
@@ -107,21 +118,75 @@ export default {
       ]
     };
   },
+  onLoad(option) {
+    params = option;
+  },
+  onReady() {
+    this.airConInfo.equipName = params.equipName;
+    this.airConInfo.name = params.roomname;
+    console.log(this.getValue());
+    this.getValue().then(data => {
+      this.changeValue2()
+    });
+  },
   methods: {
+    changeValue1() {
+      this.Lists.forEach(item => {
+        switch (item.Name) {
+          case "上下风":
+            this.airConInfo.sxfeng = item.isclick;
+            break;
+          case "左右风":
+            this.airConInfo.zyfeng = item.isclick;
+            break;
+          case "净化":
+            this.airConInfo.clear = item.isclick;
+            break;
+          case "电辅热":
+            this.airConInfo.heat = item.isclick;
+            break;
+          case "干燥":
+            this.airConInfo.dry = item.isclick;
+            break;
+        }
+      });
+    },
+    changeValue2() {
+      this.Lists.forEach((item, index) => {
+        switch (item.Name) {
+          case "上下风":
+            item.isclick = this.airConInfo.sxfeng;
+            break;
+          case "左右风":
+            item.isclick = this.airConInfo.zyfeng;
+            break;
+          case "净化":
+            item.isclick = this.airConInfo.clear;
+            break;
+          case "电辅热":
+            item.isclick = this.airConInfo.heat;
+            break;
+          case "干燥":
+            item.isclick = this.airConInfo.dry;
+            break;
+        }
+      });
+    },
     bindPickerChange: function(e) {
       console.log("picker发送选择改变，携带值为", e.target.value);
       // 判断是哪种pick
-      if(this.Name == "模式"){
-        this.index0 = e.target.value;
-      }else if(this.Name == "定时"){
-        this.index2 = e.target.value;
+      if (this.Name == "模式") {
+        this.airConInfo.mode = e.target.value;
+      } else if (this.Name == "定时") {
+        this.airConInfo.time = e.target.value;
         this.istime = true;
-      }else{
-         this.index1 = e.target.value;
+      } else {
+        this.airConInfo.speed = e.target.value;
       }
+      this.getValue()
     },
     changestatus(item) {
-       this.Name = item.Name;
+      this.Name = item.Name;
       if (item.disabled) {
         item.isclick = true;
       } else {
@@ -130,20 +195,45 @@ export default {
       // 上下风和左右风做一个互斥
       if (item.Name == "上下风") {
         if (item.isclick) {
-          this.Lists[2].isclick = 0;
+          this.Lists[2].isclick = 0
+          this.airConInfo.zyfeng = 0;
         }
       } else if (item.Name == "左右风") {
         if (item.isclick) {
-          this.Lists[1].isclick = 0;
+          this.Lists[1].isclick = 0
+          this.airConInfo.sxfeng = 0;
         }
       }
+      this.getValue();
     },
     changeSwitch(e) {
-      this.switchVal = e;
+      this.airConInfo.changer = e;
+      this.getValue()
+      console.log(e);
     },
     canceltime(item) {
       item.isclick = 0;
       this.istime = false;
+    },
+    getValue() {
+      return new Promise((reslove, reject) => {
+        this.changeValue1();
+        uni.request({
+          url: this.$apis.airConditionApi,
+          data: this.airConInfo,
+          method: "POST",
+          header: {
+            "custom-header": "hello" //自定义请求头信息
+          },
+          success: res => {
+            console.log(res.data, "res");
+            if (res.data.inf && res.data.err != -1) {
+              this.airConInfo = res.data.inf[0];
+            }
+            reslove();
+          }
+        });
+      });
     }
   }
 };

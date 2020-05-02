@@ -17,11 +17,9 @@ const sqlInsert = "insert into room set?"
  */
 
 router.post("/roomlist",(req,res)=>{
-    console.log(req.body.roomName)
     if(req.body.roomName){
         const {roomName} = req.body
         db.exec(sqlSeach1,[roomName],(err,data,fields) => {
-            console.log(data)
             if(data.length > 0){
                 res.send({
                     inf:data,

@@ -1,6 +1,5 @@
 <template>
   <view name="KXDateTime">
-    <text @click="open">{{data?data:'请选择'}}</text>
     <uni-popup ref="popup" type="bottom">
       <view class="but">
         <text @click="close">取消</text>

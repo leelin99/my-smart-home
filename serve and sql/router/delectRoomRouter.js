@@ -21,7 +21,6 @@ router.post("/delRoom",(req,res)=>{
     // 删除房间
     if(req.body.name){
         const {name} = req.body
-        console.log(name)
         db.exec(sqldelect('room','roomName'),[name],(err,data,fields) => {
           if(err){
             res.send({

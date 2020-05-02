@@ -1,6 +1,7 @@
 <template>
   <view>
-    <KXDateTime :data="date" :end="enddate" :start="startdate" @rundata="kxdatetime"></KXDateTime>
+    <group-check @getValue="getValue" ref="groupCheck"></group-check>
+    <KXDateTime :data="date" :end="enddate" :start="startdate" @rundata="kxdatetime" ref="DateTime"></KXDateTime>
     <header class="header" :style="{backgroundColor:switchVal?blue:gray}">
       <mSwitch
         style="position:absolute;top:10%;right:2%;"
@@ -9,16 +10,16 @@
       ></mSwitch>
       <view style="position:absolute;top:10%;left:50%;transform:translateX(-50%)">热水器</view>
       <view
-        style="position:absolute;top:30%;left:50%;transform:translateX(-45%);font-size:85px"
+        style="position:absolute;top:20%;left:50%;transform:translateX(-45%);font-size:85px"
       >{{temperature}}°</view>
-      <view style="position:absolute;top:60%;left:50%;transform:translateX(-50%)">设置温度：{{status}}</view>
+      <view style="position:absolute;top:50%;left:50%;transform:translateX(-50%)">设置温度：{{status}}</view>
       <view
-        style="position:absolute;top:65%;left:50%;transform:translateX(-50%)"
+        style="position:absolute;top:55%;left:50%;transform:translateX(-50%)"
       >实际温度:{{actTemp}}° 热水量:{{waterNum}}%</view>
       <view
-        style="position:absolute;top:75%;left:50%;transform:translateX(-50%)"
+        style="position:absolute;top:65%;left:50%;transform:translateX(-50%);width:100vw"
         v-show="istime"
-      >定时:{{time[index]}}关闭</view>
+      >定时:{{week?week:"今天"}}<br/>{{startTime + "~" + endTime}}</view>
       <view style="position:absolute;top:70%;left:50%;transform:translateX(-50%)">
         <text style="font-size:80px;margin-right:20px" @tap="temperature-=5">-</text>
         <text style="font-size:80px;margin-left:20px" @tap="temperature+=5">+</text>
@@ -30,7 +31,7 @@
           <picker
             @change="bindPickerChange"
             :value="index"
-            :range="time"
+            :range="item.array"
             :disabled="!item.disabled"
             @cancel="canceltime(item)"
           >
@@ -52,20 +53,25 @@
 <script>
 import mSwitch from "../../component/m-switch";
 import KXDateTime from "../../component/kx-datetime/kx-datetime.vue";
+import groupCheck from "../../component/groupCheck.vue";
 export default {
   components: {
     mSwitch,
-    KXDateTime
+    KXDateTime,
+    groupCheck
   },
   data() {
     return {
+      isShow:false,
+      weeks:["周日","周一","周二","周三","周四","周五","周六"],
+      startTime:"",
+      endTime:"",
+      week:"",
       status: "加热中",
       actTemp: "75",
       waterNum: "100",
       istime: false,
       index: 0,
-      value: "30分钟",
-      time: [],
       visible: true,
       switchVal: false,
       blue: "#FF6666",
@@ -76,20 +82,37 @@ export default {
         { Name: "云管家", icon: "icon-yunguanjia", isclick: 0 },
         { Name: "高温抑菌", icon: "icon-yijun", isclick: 0 },
         { Name: "无电洗", icon: "icon-meidian", isclick: 0 },
-        { Name: "预约", icon: "icon-yuyue", isclick: 0, disabled: true },
+        { Name: "预约", icon: "icon-yuyue", isclick: 0, disabled: true,array:["选择星期,默认不重复","选择开始结束时间"] },
         { Name: "半胆速热", icon: "icon-redu", isclick: 0 }
       ]
     };
   },
   methods: {
+    getValue(e){
+       this.week = "";
+      for(let i = 0;i<this.weeks.length;i++){
+        if(e.includes(i.toString())){
+          this.week +=this.weeks[i] + "  "
+        }
+      }
+      console.log(e,this.week,"this.week")
+    },
     kxdatetime(e) {
-      console.log(e)
+      console.log(e,"kxdatetime")
+      this.startTime = e.startTime;
+      this.endTime = e.endTime;
+      this.istime = true
       // this.date = e;
     },
     bindPickerChange: function(e) {
       console.log("picker发送选择改变，携带值为", e.target.value);
       this.index = e.target.value;
-      this.istime = true;
+      if(this.index == 1){
+        console.log(this.$refs.DateTime)
+        this.$refs.DateTime.open()
+      }else{
+        this.$refs.groupCheck.open()
+      }
     },
     changestatus(item) {
       if (item.disabled) {

@@ -62,27 +62,27 @@ export default {
       switch (item.seleVal) {
         case "智能空调":
           uni.navigateTo({
-            url: "../controlPage/AirConditioner",
+            url: "../controlPage/AirConditioner?roomname="+params.roomname + "&equipName=" + item.equipName,
           });
           break;
           case "智能电灯":
           uni.navigateTo({
-            url: "../controlPage/lamp",
+            url: "../controlPage/lamp?roomname="+params.roomname + "&equipName=" + item.equipName,
           });
           break;
           case "智能门锁":
           uni.navigateTo({
-            url: "../controlPage/door",
+            url: "../controlPage/door?roomname="+params.roomname + "&equipName=" + item.equipName,
           });
           break;
           case "智能音响":
           uni.navigateTo({
-            url: "../controlPage/sound",
+            url: "../controlPage/sound?roomname="+params.roomname + "&equipName=" + item.equipName,
           });
           break;
           case "智能热水器":
           uni.navigateTo({
-            url: "../controlPage/Heater",
+            url: "../controlPage/Heater?roomname="+params.roomname + "&equipName=" + item.equipName,
           });
           break;
       }
