@@ -2,11 +2,13 @@ const webSocket = require("ws");
 const db = require("./mysql/mysql");
 const wss = new webSocket.Server({ port: 8081 });
 let receiveVal = [];
+let check = "";
 console.log("开始建立连接...");
 wss.on("connection", (client) => {
   client.on("message", (message) => {
     console.log("received: %s", message);
-    let check = setInterval(() => {
+    clearInterval(check)
+    check = setInterval(() => {
       db.exec(
         "select * from aircondition where name = ?",
         [message],
@@ -27,9 +29,10 @@ wss.on("connection", (client) => {
             } else {             
               status = 1;
             }
-            receiveVal = JsonData
             if (status == 1) {
+              console.log(receiveVal)
               client.send(JSON.stringify(data));
+              receiveVal = JsonData
             }
           }
         }
