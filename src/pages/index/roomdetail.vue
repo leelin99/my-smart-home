@@ -130,7 +130,6 @@ export default {
     },
     confirm(e) {
       this.equipInf = e;
-      console.log(this.equipInf, e, "eeee");
       if (e.equipName && e.seleVal != "请选择类别") {
         this.isshow = false;
         this.lists.push(e);
@@ -139,13 +138,13 @@ export default {
         if (!e.equipName) {
           wx.showToast({
             title: "请输入设备名",
-            icon: "warn",
+            icon: "node",
             duration: 2000
           });
         } else if (e.seleVal == "请选择类别") {
           wx.showToast({
             title: "请选择类别",
-            icon: "warn",
+            icon: "node",
             duration: 2000
           });
         }

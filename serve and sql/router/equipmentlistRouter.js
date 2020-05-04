@@ -5,6 +5,11 @@ const sqlSeach1 = "select * from equipment where name = ?";
 const sqlSeach2 = "select * from equipment";
 const sqlInsert = "insert into equipment set?";
 const airSqlInsert = "insert into aircondition set?";
+const doorSqlInsert = "insert into door set?";
+const soundSqlInsert = "insert into sound set?";
+const lampSqlInsert = "insert into lamp set?";
+const heaterSqlInsert = "insert into heater set?";
+let params1 = {};
 // const roommodel = require("../db/model/roommodel")
 /**
  * @api {post} /room/equipmentlist 设备信息表
@@ -33,8 +38,124 @@ router.post("/equipmentlist", (req, res) => {
       } else {
         switch (params.seleVal) {
           case "智能空调":
-            const params1 = {name,equipName,temperature:20,mode:0,sxfeng:0,zyfeng:0,speed:0,clear:0,time:0,heat:0,dry:0,changer:0};
+            params1 = {
+              name,
+              equipName,
+              temperature: 20,
+              mode: 0,
+              sxfeng: 0,
+              zyfeng: 0,
+              speed: 0,
+              clear: 0,
+              time: 0,
+              heat: 0,
+              dry: 0,
+              changer: 0,
+            };
             db.exec(airSqlInsert, params1, (err1, data, fields) => {
+              if (err1) {
+                res.send({
+                  mes: "失败",
+                  inf: err1,
+                  err: -2,
+                });
+              } else {
+                res.send({
+                  mes: "插入成功",
+                  inf: "",
+                  err: 0,
+                });
+              }
+            });
+            break;
+          case "智能门锁":
+            params1 = {
+              name,
+              equipName,
+              camera: 0,
+              sound: 0,
+              password: 123456,
+              changer: 0,
+            };
+            db.exec(doorSqlInsert, params1, (err1, data, fields) => {
+              if (err1) {
+                res.send({
+                  mes: "失败",
+                  inf: err1,
+                  err: -2,
+                });
+              } else {
+                res.send({
+                  mes: "插入成功",
+                  inf: "",
+                  err: 0,
+                });
+              }
+            });
+            break;
+          case "智能电灯":
+            params1 = {
+              name,
+              equipName,
+              mode: 0,
+              lightness: 0,
+              color: 0,
+              changer: 0,
+            };
+            db.exec(lampSqlInsert, params1, (err1, data, fields) => {
+              if (err1) {
+                res.send({
+                  mes: "失败",
+                  inf: err1,
+                  err: -2,
+                });
+              } else {
+                res.send({
+                  mes: "插入成功",
+                  inf: "",
+                  err: 0,
+                });
+              }
+            });
+            break;
+          case "智能音响":
+            params1 = {
+              name,
+              equipName,
+              child: 0,
+              mode: 0,
+              changer: 0,
+            };
+            db.exec(soundSqlInsert, params1, (err1, data, fields) => {
+              if (err1) {
+                res.send({
+                  mes: "失败",
+                  inf: err1,
+                  err: -2,
+                });
+              } else {
+                res.send({
+                  mes: "插入成功",
+                  inf: "",
+                  err: 0,
+                });
+              }
+            });
+            break;
+          case "智能热水器":
+            params1 = {
+              name,
+              equipName,
+              temperature: 20,
+              ezeng: 0,
+              cloud: 0,
+              highTem: 0,
+              noEletri: 0,
+              time: 0,
+              fastHeat: 0,
+              changer: 0,
+            };
+            db.exec(heaterSqlInsert, params1, (err1, data, fields) => {
               if (err1) {
                 res.send({
                   mes: "失败",

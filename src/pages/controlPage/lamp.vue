@@ -1,16 +1,18 @@
 <template>
   <view>
-    <header class="header" :style="{backgroundColor:switchVal?blue:gray}">
+    <header class="header" :style="{backgroundColor:lampInfo.changer?blue:gray}">
       <mSwitch
         style="position:absolute;top:10%;right:2%;"
-        :value="switchVal"
+        :value="lampInfo.changer"
         @change="changeSwitch"
       ></mSwitch>
       <view style="position:absolute;top:10%;left:50%;transform:translateX(-50%)">电灯</view>
       <view
         style="position:absolute;top:30%;left:50%;transform:translateX(-45%);font-size:40px"
-      >{{status}}</view>
-      <view style="position:absolute;top:60%;left:50%;transform:translateX(-50%);width:100vw">当前模式：{{Lists[2].array[mode]}} 亮度：{{Lists[1].array[lightness]}}</view>
+      >{{lampInfo.changer?"开启":"关闭"}}</view>
+      <view
+        style="position:absolute;top:60%;left:50%;transform:translateX(-50%);width:100vw"
+      >当前模式：{{Lists[2].array[lampInfo.mode]}} 亮度：{{Lists[1].array[lampInfo.lightness]}}</view>
     </header>
     <nav class="nav">
       <ul class="flex">
@@ -38,6 +40,7 @@
 </template>
 
 <script>
+let params = {};
 import mSwitch from "../../component/m-switch";
 export default {
   components: {
@@ -47,14 +50,17 @@ export default {
     return {
       istime: false,
       Name: "",
-      status: "关闭中",
       mode: "",
       lightness: 5,
-      value: "30分钟",
       visible: true,
-      // indicatorStyle: `height: ${Math.round(
-      //   uni.getSystemInfoSync().screenWidth / (750 / 100)
-      // )}px;width:100vw`,
+      lampInfo: {
+      name: "",
+      equipName: "",
+        mode: 0,
+        lightness: 0,
+        color: 0,
+        changer: 0
+      },
       switchVal: false,
       blue: "#9999FE",
       gray: "gray",
@@ -72,7 +78,7 @@ export default {
           icon: "icon-liangdu-",
           isclick: 0,
           disabled: true,
-          array: ["10%", "30%", "50%", "70%", "80%", "90%", "100%"]
+          array: [10, 30, 50, 70, 80, 90, 100]
         },
         {
           Name: "模式调节",
@@ -84,7 +90,41 @@ export default {
       ]
     };
   },
+  onLoad(option) {
+    params = option;
+  },
+  onReady() {
+    this.lampInfo.equipName = params.equipName;
+    this.lampInfo.name = params.roomname;
+    this.getValue().then(data => {
+      this.changeValue2();
+    });
+  },
   methods: {
+    changeValue1() {
+      this.Lists.forEach(item => {
+        switch (item.Name) {
+          case "语音设置":
+            this.lampInfo.sound = item.isclick;
+            break;
+          case "摄像头":
+            this.lampInfo.camera = item.isclick;
+            break;
+        }
+      });
+    },
+    changeValue2() {
+      this.Lists.forEach((item, index) => {
+        switch (item.Name) {
+          case "语音设置":
+            item.isclick = this.lampInfo.sound;
+            break;
+          case "摄像头":
+            item.isclick = this.lampInfo.camera;
+            break;
+        }
+      });
+    },
     bindPickerChange: function(e) {
       console.log("picker发送选择改变，携带值为", e.target.value);
       if (this.Name == "颜色调节") {
@@ -96,16 +136,17 @@ export default {
             this.blue = "red";
             break;
           case 3:
-            this.blue = "lightgreen";
+            this.blue = "#33E680";
             break;
         }
       } else if (this.Name == "亮度调节") {
-        this.lightness = e.target.value
+        this.lightness = e.target.value;
       } else {
-        this.mode = e.target.value
+        this.mode = e.target.value;
       }
       this.index = e.target.value;
       this.istime = true;
+      this.getValue();
     },
     changestatus(item) {
       this.Name = item.Name;
@@ -114,14 +155,37 @@ export default {
       } else {
         item.isclick = !item.isclick;
       }
+      this.getValue();
     },
     changeSwitch(e) {
       this.switchVal = e;
+      this.lampInfo.changer = this.switchVal;
+      this.getValue();
       if (e) {
         this.status = "开启中";
       } else {
         this.status = "关闭中";
       }
+    },
+    getValue() {
+      return new Promise((reslove, reject) => {
+        this.changeValue1();
+        uni.request({
+          url: this.$apis.soundApi,
+          data: this.lampInfo,
+          method: "POST",
+          header: {
+            "custom-header": "hello" //自定义请求头信息
+          },
+          success: res => {
+            console.log(res.data, "res");
+            if (res.data.inf && res.data.err != -1) {
+              this.lampInfo = res.data.inf[0];
+            }
+            reslove();
+          }
+        });
+      });
     },
     canceltime(item) {
       item.isclick = 0;

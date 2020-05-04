@@ -1,18 +1,23 @@
 <template>
   <view>
-    <pay-keyboard :show_key="show_key" @hideFun="hideFun" @getPassword="getPassword" :pas="password"></pay-keyboard>
-    <header class="header" :style="{backgroundColor:switchVal?blue:gray}">
+    <pay-keyboard
+      :show_key="show_key"
+      @hideFun="hideFun"
+      @getPassword="getPassword"
+      :pas="password"
+    ></pay-keyboard>
+    <header class="header" :style="{backgroundColor:doorInfo.changer?blue:gray}">
       <mSwitch
         style="position:absolute;top:10%;right:2%;"
-        :value="switchVal"
-        :disabled="!switchVal"
+        :value="doorInfo.changer"
+        :disabled="!doorInfo.changer"
         @tap="inputPas"
         @change="changeSwitch"
       ></mSwitch>
       <view style="position:absolute;top:10%;left:50%;transform:translateX(-50%)">门锁</view>
       <view
         style="position:absolute;top:30%;left:50%;transform:translateX(-45%);font-size:40px"
-      >{{switchVal?"开启中":"关闭中"}}</view>
+      >{{doorInfo.changer?"开启中":"关闭中"}}</view>
       <view
         style="position:absolute;top:50%;left:50%;transform:translateX(-50%)"
       >摄像头:{{Lists[1].isclick?"开启中":"关闭中"}}</view>
@@ -46,6 +51,7 @@
 </template>
 
 <script>
+let params = {};
 import mSwitch from "../../component/m-switch";
 import payKeyboard from "../../component/keyboard";
 export default {
@@ -55,7 +61,7 @@ export default {
   },
   data() {
     return {
-      trueFalse:0,//状态切换标志,0就是关闭转向开启，1就是开启转向关闭
+      trueFalse: 0, //状态切换标志,0就是关闭转向开启，1就是开启转向关闭
       show_key: false,
       password: "",
       istime: false,
@@ -63,22 +69,15 @@ export default {
       camStatus: "关闭中",
       soundStatus: "关闭中",
       index: 0,
-      value: "30分钟",
-      time: [
-        "30分钟",
-        "1小时",
-        "2小时",
-        "3小时",
-        "4小时",
-        "5小时",
-        "6小时",
-        "7小时",
-        "8小时"
-      ],
+      doorInfo: {
+        camera: 0,
+        sound: 0,
+        password: 0,
+        name: "",
+        equipName: "",
+        changer: 0
+      },
       visible: true,
-      // indicatorStyle: `height: ${Math.round(
-      //   uni.getSystemInfoSync().screenWidth / (750 / 100)
-      // )}px;width:100vw`,
       switchVal: false,
       blue: "#00965E",
       gray: "gray",
@@ -89,11 +88,44 @@ export default {
       ]
     };
   },
+  onLoad(option) {
+    params = option;
+  },
+  onReady() {
+    this.doorInfo.equipName = params.equipName;
+    this.doorInfo.name = params.roomname;
+    this.getValue().then(data => {
+      this.changeValue2();
+    });
+  },
   methods: {
+    changeValue1() {
+      this.Lists.forEach(item => {
+        switch (item.Name) {
+          case "语音设置":
+            this.doorInfo.sound = item.isclick;
+            break;
+          case "摄像头":
+            this.doorInfo.camera = item.isclick;
+            break;
+        }
+      });
+    },
+    changeValue2() {
+      this.Lists.forEach((item, index) => {
+        switch (item.Name) {
+          case "语音设置":
+            item.isclick = this.doorInfo.sound;
+            break;
+          case "摄像头":
+            item.isclick = this.doorInfo.camera;
+            break;
+        }
+      });
+    },
     bindPickerChange: function(e) {
       console.log("picker发送选择改变，携带值为", e.target.value);
-      this.index = e.target.value;
-      this.istime = true;
+      this.getValue();
     },
     changestatus(item) {
       if (item.disabled) {
@@ -101,16 +133,15 @@ export default {
       } else {
         item.isclick = !item.isclick;
       }
+      this.getValue();
     },
     changeSwitch(e) {
-      this.switchVal = e 
+      this.switchVal = e;
+      this.doorInfo.changer = this.switchVal;
+      this.getValue();
       setTimeout(() => {
-        this.trueFalse = 0
+        this.trueFalse = 0;
       }, 200);
-    },
-    canceltime(item) {
-      item.isclick = 0;
-      this.istime = false;
     },
     // 开启密码弹框
     inputPas() {
@@ -125,22 +156,45 @@ export default {
     // 获取密码
     getPassword(e) {
       this.password = e.password;
-      if (this.password === "123456") {
+      console.log(this.doorInfo.password);
+      if (this.password == this.doorInfo.password) {
         this.switchVal = true;
         this.show_key = false;
         this.password = "";
-        this.trueFalse = 1
+        this.trueFalse = 1;
+        this.doorInfo.changer = this.switchVal;
+        this.getValue();
       } else {
-        const _this = this
+        const _this = this;
         uni.showToast({
-          title: '密码错误,请重新输入',
+          title: "密码错误,请重新输入",
           duration: 2000,
-          icon:'none',
-           success() {
+          icon: "none",
+          success() {
             _this.password = "";
           }
         });
       }
+    },
+    getValue() {
+      return new Promise((reslove, reject) => {
+        this.changeValue1();
+        uni.request({
+          url: this.$apis.doorApi,
+          data: this.doorInfo,
+          method: "POST",
+          header: {
+            "custom-header": "hello" //自定义请求头信息
+          },
+          success: res => {
+            console.log(res.data, "res");
+            if (res.data.inf && res.data.err != -1) {
+              this.doorInfo = res.data.inf[0];
+            }
+            reslove();
+          }
+        });
+      });
     }
   }
 };
