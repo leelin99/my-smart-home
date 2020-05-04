@@ -9,7 +9,13 @@
       <text class="icon-jia iconfont right" style="font-size:20px;color:black" @click="isshow=true"></text>
     </view>
     <view class="aui-news-box" style="margin-top:50px">
-      <a @tap="tapequip(list)" class="aui-news-item" v-for="(list, i) in lists" :key="i">
+      <a
+        @tap="tapequip(list)"
+        class="aui-news-item"
+        v-for="(list, i) in lists"
+        :key="i"
+        @longpress="delEquip(list)"
+      >
         <view class="aui-news-item-hd">
           <img :src="list.image?list.image:'../../static/image/control.png'" alt />
         </view>
@@ -54,57 +60,88 @@ export default {
   onReady() {
     this.equipList();
     console.log(params, "params");
+    this.roomName = params.roomname;
   },
   methods: {
+    delEquip(e) {
+      console.log(e);
+      this.delRoom({ name: e.equipName }).then(()=>{
+       this.equipList();
+      });
+    },
     //页面跳转
     tapequip(item) {
       console.log(item);
       switch (item.seleVal) {
         case "智能空调":
           uni.navigateTo({
-            url: "../controlPage/AirConditioner?roomname="+params.roomname + "&equipName=" + item.equipName,
+            url:
+              "../controlPage/AirConditioner?roomname=" +
+              params.roomname +
+              "&equipName=" +
+              item.equipName
           });
           break;
-          case "智能电灯":
+        case "智能电灯":
           uni.navigateTo({
-            url: "../controlPage/lamp?roomname="+params.roomname + "&equipName=" + item.equipName,
+            url:
+              "../controlPage/lamp?roomname=" +
+              params.roomname +
+              "&equipName=" +
+              item.equipName
           });
           break;
-          case "智能门锁":
+        case "智能门锁":
           uni.navigateTo({
-            url: "../controlPage/door?roomname="+params.roomname + "&equipName=" + item.equipName,
+            url:
+              "../controlPage/door?roomname=" +
+              params.roomname +
+              "&equipName=" +
+              item.equipName
           });
           break;
-          case "智能音响":
+        case "智能音响":
           uni.navigateTo({
-            url: "../controlPage/sound?roomname="+params.roomname + "&equipName=" + item.equipName,
+            url:
+              "../controlPage/sound?roomname=" +
+              params.roomname +
+              "&equipName=" +
+              item.equipName
           });
           break;
-          case "智能热水器":
+        case "智能热水器":
           uni.navigateTo({
-            url: "../controlPage/Heater?roomname="+params.roomname + "&equipName=" + item.equipName,
+            url:
+              "../controlPage/Heater?roomname=" +
+              params.roomname +
+              "&equipName=" +
+              item.equipName
           });
           break;
       }
     },
     // 数据删除
     delRoom(param) {
-      uni.request({
-        url: this.$apis.delRoomApi,
-        data: { name: param },
-        method: "POST",
-        header: {
-          "custom-header": "hello" //自定义请求头信息
-        },
-        success: res => {
-          console.log(res.data);
-          const pages = getCurrentPages();
-          const beforePage = pages[pages.length - 2];
-          console.log(beforePage);
-          wx.navigateBack({
-            success: function() {}
-          });
-        }
+      return new Promise((resolve, reject) => {
+        uni.request({
+          url: this.$apis.delRoomApi,
+          data: param,
+          method: "POST",
+          header: {
+            "custom-header": "hello" //自定义请求头信息
+          },
+          success: res => {
+            resolve();
+            if (param.roomName) {
+              const pages = getCurrentPages();
+              const beforePage = pages[pages.length - 2];
+              console.log(beforePage);
+              wx.navigateBack({
+                success: function() {}
+              });
+            }
+          }
+        });
       });
     },
     // 列表添加和更新
@@ -126,7 +163,7 @@ export default {
       });
     },
     del() {
-      this.delRoom(params.roomname);
+      this.delRoom({ roomName: params.roomname });
     },
     confirm(e) {
       this.equipInf = e;

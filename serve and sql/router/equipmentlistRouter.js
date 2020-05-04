@@ -98,6 +98,7 @@ router.post("/equipmentlist", (req, res) => {
               name,
               equipName,
               mode: 0,
+              status:1,
               lightness: 0,
               color: 0,
               changer: 0,
@@ -125,6 +126,7 @@ router.post("/equipmentlist", (req, res) => {
               child: 0,
               mode: 0,
               changer: 0,
+              status:1,
             };
             db.exec(soundSqlInsert, params1, (err1, data, fields) => {
               if (err1) {
@@ -151,7 +153,6 @@ router.post("/equipmentlist", (req, res) => {
               cloud: 0,
               highTem: 0,
               noEletri: 0,
-              time: 0,
               fastHeat: 0,
               changer: 0,
             };

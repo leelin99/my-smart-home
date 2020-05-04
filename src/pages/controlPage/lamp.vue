@@ -12,7 +12,7 @@
       >{{lampInfo.changer?"开启":"关闭"}}</view>
       <view
         style="position:absolute;top:60%;left:50%;transform:translateX(-50%);width:100vw"
-      >当前模式：{{Lists[2].array[lampInfo.mode]}} 亮度：{{Lists[1].array[lampInfo.lightness]}}</view>
+      >当前模式：{{Lists[2].array[lampInfo.mode]}} 亮度：{{Lists[1].array[lampInfo.lightness]}}%</view>
     </header>
     <nav class="nav">
       <ul class="flex">
@@ -51,14 +51,14 @@ export default {
       istime: false,
       Name: "",
       mode: "",
-      lightness: 5,
       visible: true,
       lampInfo: {
-      name: "",
-      equipName: "",
+        name: "",
+        equipName: "",
         mode: 0,
         lightness: 0,
         color: 0,
+        status: 0,
         changer: 0
       },
       switchVal: false,
@@ -96,53 +96,46 @@ export default {
   onReady() {
     this.lampInfo.equipName = params.equipName;
     this.lampInfo.name = params.roomname;
-    this.getValue().then(data => {
-      this.changeValue2();
+    this.getValue().then(() => {
+      switch (this.lampInfo.color) {
+        case 0:
+          this.blue = "#E09101";
+          break;
+        case 1:
+          this.blue = "#9999FE";
+          break;
+        case 2:
+          this.blue = "red";
+          break;
+        case 3:
+          this.blue = "#33E680";
+          break;
+      }
     });
   },
   methods: {
-    changeValue1() {
-      this.Lists.forEach(item => {
-        switch (item.Name) {
-          case "语音设置":
-            this.lampInfo.sound = item.isclick;
-            break;
-          case "摄像头":
-            this.lampInfo.camera = item.isclick;
-            break;
-        }
-      });
-    },
-    changeValue2() {
-      this.Lists.forEach((item, index) => {
-        switch (item.Name) {
-          case "语音设置":
-            item.isclick = this.lampInfo.sound;
-            break;
-          case "摄像头":
-            item.isclick = this.lampInfo.camera;
-            break;
-        }
-      });
-    },
     bindPickerChange: function(e) {
       console.log("picker发送选择改变，携带值为", e.target.value);
       if (this.Name == "颜色调节") {
+        this.lampInfo.color = e.target.value;
         switch (e.target.value) {
-          case 0:
-            this.blue = "yellow";
+          case "0":
+            this.blue = "#E09101";
             break;
-          case 2:
+             case "1":
+            this.blue = "#9999FE";
+            break;
+          case "2":
             this.blue = "red";
             break;
-          case 3:
+          case "3":
             this.blue = "#33E680";
             break;
         }
       } else if (this.Name == "亮度调节") {
-        this.lightness = e.target.value;
+        this.lampInfo.lightness = e.target.value;
       } else {
-        this.mode = e.target.value;
+        this.lampInfo.mode = e.target.value;
       }
       this.index = e.target.value;
       this.istime = true;
@@ -150,28 +143,16 @@ export default {
     },
     changestatus(item) {
       this.Name = item.Name;
-      if (item.disabled) {
-        item.isclick = true;
-      } else {
-        item.isclick = !item.isclick;
-      }
-      this.getValue();
     },
     changeSwitch(e) {
       this.switchVal = e;
       this.lampInfo.changer = this.switchVal;
       this.getValue();
-      if (e) {
-        this.status = "开启中";
-      } else {
-        this.status = "关闭中";
-      }
     },
     getValue() {
       return new Promise((reslove, reject) => {
-        this.changeValue1();
         uni.request({
-          url: this.$apis.soundApi,
+          url: this.$apis.lampApi,
           data: this.lampInfo,
           method: "POST",
           header: {

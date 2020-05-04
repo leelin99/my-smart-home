@@ -1,32 +1,34 @@
 <template>
   <view>
-    <group-check @getValue="getValue" ref="groupCheck"></group-check>
+    <group-check @getValue="getHeatVal" ref="groupCheck"></group-check>
     <KXDateTime :data="date" :end="enddate" :start="startdate" @rundata="kxdatetime" ref="DateTime"></KXDateTime>
-    <header class="header" :style="{backgroundColor:switchVal?blue:gray}">
+    <header class="header" :style="{backgroundColor:heaterInfo.changer?blue:gray}">
       <mSwitch
         style="position:absolute;top:10%;right:2%;"
-        :value="switchVal"
+        :value="heaterInfo.changer"
         @change="changeSwitch"
       ></mSwitch>
       <view style="position:absolute;top:10%;left:50%;transform:translateX(-50%)">热水器</view>
       <view
         style="position:absolute;top:20%;left:50%;transform:translateX(-45%);font-size:85px"
-      >{{temperature}}°</view>
-      <view style="position:absolute;top:50%;left:50%;transform:translateX(-50%)">设置温度：{{status}}</view>
+      >{{heaterInfo.temperature}}°</view>
+      <view
+        style="position:absolute;top:50%;left:50%;transform:translateX(-50%)"
+      >设置温度：{{heaterInfo.temperature}}°</view>
       <view
         style="position:absolute;top:55%;left:50%;transform:translateX(-50%)"
       >实际温度:{{actTemp}}° 热水量:{{waterNum}}%</view>
       <view
         style="position:absolute;top:65%;left:50%;transform:translateX(-50%);width:100vw"
-        v-show="istime"
+        v-show="heaterInfo.startTime"
       >
-        定时:{{week?week:"今天"}}
+        定时:{{heaterInfo.week?week:"今天"}}
         <br />
-        {{startTime + "~" + endTime}}
+        {{heaterInfo.startTime + "~" + heaterInfo.endTime}}
       </view>
       <view style="position:absolute;top:70%;left:50%;transform:translateX(-50%)">
-        <text style="font-size:80px;margin-right:20px" @tap="temperature-=5">-</text>
-        <text style="font-size:80px;margin-left:20px" @tap="temperature+=5">+</text>
+        <text style="font-size:80px;margin-right:20px" @tap="heaterInfo.temperature-=5;getValue()">-</text>
+        <text style="font-size:80px;margin-left:20px" @tap="heaterInfo.temperature+=5;getValue()">+</text>
       </view>
     </header>
     <nav class="nav">
@@ -55,6 +57,7 @@
 </template>
 
 <script>
+let params = {};
 import mSwitch from "../../component/m-switch";
 import KXDateTime from "../../component/kx-datetime/kx-datetime.vue";
 import groupCheck from "../../component/groupCheck.vue";
@@ -75,6 +78,22 @@ export default {
       actTemp: "75",
       waterNum: "100",
       istime: false,
+      heaterInfo: {
+        temperature: 0,
+        mode: 0,
+        ezeng: 0,
+        cloud: 0,
+        highTem: 0,
+        noEletri: 0,
+        ezeng: 20,
+        week: "",
+        startTime: "",
+        endTime: "",
+        fastHeat: 0,
+        name: "",
+        equipName: "",
+        changer: 0
+      },
       index: 0,
       visible: true,
       switchVal: false,
@@ -97,42 +116,103 @@ export default {
       ]
     };
   },
+  onLoad(option) {
+    params = option;
+  },
+  onReady() {
+    this.heaterInfo.equipName = params.equipName;
+    this.heaterInfo.name = params.roomname;
+    console.log(this.getValue());
+    this.getValue().then(data => {
+      this.changeValue2();
+    });
+  },
   methods: {
-    getValue(e) {
+    changeValue1() {
+      this.Lists.forEach(item => {
+        switch (item.Name) {
+          case "e+增容":
+            this.heaterInfo.ezeng = item.isclick;
+            break;
+          case "云管家":
+            this.heaterInfo.cloud = item.isclick;
+            break;
+          case "高温抑菌":
+            this.heaterInfo.highTem = item.isclick;
+            break;
+          case "无电洗":
+            this.heaterInfo.noEletri = item.isclick;
+            break;
+          case "半胆速热":
+            this.heaterInfo.fastHeat = item.isclick;
+            break;
+        }
+      });
+    },
+    changeValue2() {
+      this.Lists.forEach((item, index) => {
+        switch (item.Name) {
+          case "e+增容":
+            item.isclick = this.heaterInfo.ezeng;
+            break;
+          case "云管家":
+            item.isclick = this.heaterInfo.cloud;
+            break;
+          case "高温抑菌":
+            item.isclick = this.heaterInfo.highTem;
+            break;
+          case "无电洗":
+            item.isclick = this.heaterInfo.noEletri;
+            break;
+          case "半胆速热":
+            item.isclick = this.heaterInfo.fastHeat;
+            break;
+        }
+      });
+    },
+    getHeatVal(e) {
       this.week = "";
       for (let i = 0; i < this.weeks.length; i++) {
         if (e.includes(i.toString())) {
           this.week += this.weeks[i] + "  ";
         }
       }
-      console.log(e, this.week, "this.week");
+     this.heaterInfo.week = this.week;
     },
     kxdatetime(e) {
       console.log(e, "kxdatetime");
-      this.startTime = e.startTime;
-      this.endTime = e.endTime;
+      this.heaterInfo.startTime = e.startTime;
+      this.heaterInfo.endTime = e.endTime;
       this.istime = true;
       // this.date = e;
     },
     bindPickerChange: function(e) {
       console.log("picker发送选择改变，携带值为", e.target.value);
-      this.index = e.target.value;
+      if (this.Name == "预约") {
+        this.index = e.target.value;
+        this.istime = true;
+      }
       if (this.index == 1) {
         console.log(this.$refs.DateTime);
         this.$refs.DateTime.open();
       } else {
         this.$refs.groupCheck.open();
       }
+      this.getValue();
     },
     changestatus(item) {
+      this.Name = item.Name;
       if (item.disabled) {
         item.isclick = true;
       } else {
         item.isclick = !item.isclick;
       }
+      this.getValue();
     },
     changeSwitch(e) {
       this.switchVal = e;
+      this.heaterInfo.changer = e;
+      this.getValue();
     },
     canceltime(item) {
       item.isclick = 0;
@@ -140,6 +220,26 @@ export default {
     },
     selectTimeEvent(e) {
       console.log(e);
+    },
+    getValue() {
+      return new Promise((reslove, reject) => {
+        this.changeValue1();
+        uni.request({
+          url: this.$apis.heaterApi,
+          data: this.heaterInfo,
+          method: "POST",
+          header: {
+            "custom-header": "hello" //自定义请求头信息
+          },
+          success: res => {
+            console.log(res.data, "res");
+            if (res.data.inf && res.data.err != -1) {
+              this.heaterInfo = res.data.inf[0];
+            }
+            reslove();
+          }
+        });
+      });
     }
   }
 };

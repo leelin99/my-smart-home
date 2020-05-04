@@ -21,7 +21,8 @@ let status = 0;
  * @apiSuccess {Array} inf 电灯信息
  */
 router.post("/lamp", (req, res) => {
-  if (status) {
+  console.log(req.body.status)
+  if (req.body.status) {
     const {
       name,
       equipName,
@@ -52,7 +53,6 @@ router.post("/lamp", (req, res) => {
       }
     });
   } else {
-    status = 1
     const { name, equipName } = req.body;
     db.exec(sqlSeach1, [name, equipName], (err, data, fields) => {
       if (err) {

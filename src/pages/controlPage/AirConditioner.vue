@@ -16,7 +16,7 @@
       >{{Lists[0].array[airConInfo.mode]}} 风向：{{Lists[1].isclick?"上下风":Lists[2].isclick?"左右风":"自动风"}} 风速：{{Lists[3].array[airConInfo.speed]}}</view>
       <view
         style="position:absolute;top:65%;left:50%;transform:translateX(-50%)"
-        v-show="istime"
+        v-show="airConInfo.time==null"
       >定时:{{Lists[5].array[airConInfo.time]}}关闭</view>
       <view style="position:absolute;top:70%;left:50%;transform:translateX(-50%)">
         <text style="font-size:80px;margin-right:20px" @tap="airConInfo.temperature++;getValue()">+</text>

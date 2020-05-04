@@ -19,9 +19,9 @@ const sqlInsert = "insert into room set?"
 
 router.post("/delRoom",(req,res)=>{
     // 删除房间
-    if(req.body.name){
-        const {name} = req.body
-        db.exec(sqldelect('room','roomName'),[name],(err,data,fields) => {
+    if(req.body.roomName){
+        const {roomName} = req.body
+        db.exec(sqldelect('room','roomName'),[roomName],(err,data,fields) => {
           if(err){
             res.send({
               mes:"删除失败",
@@ -36,9 +36,9 @@ router.post("/delRoom",(req,res)=>{
             })
           }
         })
-    }else if(req.body.id){
-				const {id} = req.body
-        db.exec(sqldelect('equipment','id'),[id],(err,data,fields) => {
+    }else if(req.body.name){
+				const {name} = req.body
+        db.exec(sqldelect('equipment','equipName'),[name],(err,data,fields) => {
 					if(err){
             res.send({
 							mes:"删除失败",

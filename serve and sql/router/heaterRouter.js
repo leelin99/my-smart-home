@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../mysql/mysql");
-const sqlSeach1 = "select * from door where name = ? and equipName=?";
-const sqlUpdate = "update door set ? where name = ? and equipName=?";
+const sqlSeach1 = "select * from heater where name = ? and equipName=?";
+const sqlUpdate = "update heater set ? where name = ? and equipName=?";
 // const roommodel = require("../db/model/roommodel")
 /**
  * @api {post} /room/airCondition 设备信息表
@@ -20,13 +20,13 @@ const sqlUpdate = "update door set ? where name = ? and equipName=?";
  * @apiParam {int} time 定时
  * @apiParam {int} fastHeat 半胆速热
  * @apiParam {int} changer 开关
- * 
- * 
+ *
+ *
  *
  * @apiSuccess {Array} inf 热水器信息
  */
 router.post("/heater", (req, res) => {
-  if (req.body.equipName && req.body.name) {
+  if (req.body.equipName && req.body.temperature) {
     const {
       name,
       equipName,
@@ -35,7 +35,9 @@ router.post("/heater", (req, res) => {
       cloud,
       highTem,
       noEletri,
-      time,
+      week,
+      startTime,
+      endTime,
       fastHeat,
       changer,
     } = req.body;
@@ -45,7 +47,9 @@ router.post("/heater", (req, res) => {
       cloud,
       highTem,
       noEletri,
-      time,
+      week,
+      startTime,
+      endTime,
       fastHeat,
       changer,
     };

@@ -20,7 +20,7 @@ const sqlUpdate = "update sound set ? where name = ? and equipName=?";
  * @apiSuccess {Array} inf 音响信息
  */
 router.post("/sound", (req, res) => {
-  if (req.body.equipName && req.body.name) {
+  if (req.body.status) {
     const {
       name,
       equipName,
