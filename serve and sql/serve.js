@@ -14,6 +14,7 @@ const doorRouter = require("./router/doorRouter")
 const lampRouter = require("./router/lampRouter")
 const soundRouter = require("./router/soundRouter")
 const heaterRouter = require("./router/heaterRouter")
+const songRouter = require("./router/songRouter")
 app.listen(port,() => {
 	console.log(`启动服务器，端口号：${port}`)
 })
@@ -30,6 +31,7 @@ app.use("/room",doorRouter)
 app.use("/room",lampRouter)
 app.use("/room",soundRouter)
 app.use("/room",heaterRouter)
+app.use("/room",songRouter)
 app.get("/weather",(req,res)=>{
 	const {num} = req.query
 	axios.get(`http://www.weather.com.cn/data/sk/${num}.html`)

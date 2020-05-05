@@ -28,12 +28,21 @@ router.post("/sound", (req, res) => {
       mode,
       songName,
       changer,
+      play,
+      songurl,
+      img,
+      singer
     } = req.body;
     const params = {
       child,
       mode,
       songName,
       changer,
+      play,
+      songurl,
+      songName,
+      img,
+      singer
     };
     db.exec(sqlUpdate, [params,name,equipName], (err, data, fields) => {
       if (err) {

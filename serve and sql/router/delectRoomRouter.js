@@ -29,7 +29,7 @@ router.post("/delRoom",(req,res)=>{
               err:-1  
             })
           }else{
-            res.send({
+            res.send({             
               mes:"删除成功",
               inf:data,
               err:0,  

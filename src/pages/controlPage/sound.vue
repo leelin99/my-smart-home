@@ -16,18 +16,15 @@
       <view
         style="position:absolute;top:50%;left:50%;transform:translateX(-50%);width:100vw"
       >歌手：{{soundInfo.singer?soundInfo.singer:""}}</view>
-      <view
-        style="position:absolute;top:60%;left:50%;transform:translateX(-50%);width:100vw"
-      >描述：{{soundInfo.desc?soundInfo.singer:""}}</view>
       <view style="position:absolute;top:70%;left:50%;transform:translateX(-50%)">
         <text
-          style="font-size:50px;margin-right:20px"
-          @tap="before"
+          style="font-size:50px;margin-right:20px;z-index:9999"
+          @tap="before()"
           class="iconfont icon-shangyishou"
         ></text>
         <text
           style="font-size:50px"
-          @tap="isStop=!isStop"
+          @tap="stop()"
           :class="isStop?'icon-zanting':'icon-icon_play'"
           class="iconfont"
         ></text>
@@ -76,14 +73,17 @@ export default {
       index: 0,
       visible: true,
       soundInfo: {
-        name:"",
-        equipName:"",
+        name: "",
+        equipName: "",
         child: 0,
         songName: "",
-        mode:0,
+        mode: 0,
         changer: 0,
-        status:0,
+        status: 0,
+        play: 1
       },
+      songInfo: [],
+      songIndex: 0,
       switchVal: false,
       blue: "#009495",
       gray: "gray",
@@ -113,6 +113,45 @@ export default {
     });
   },
   methods: {
+    stop() {
+      this.isStop = !this.isStop;
+      this.soundInfo.play = this.isStop;
+      this.getValue();
+    },
+    before() {
+      this.getSong().then(() => {
+        this.songInfo.forEach((item, index) => {
+          if (item.songName == this.soundInfo.songName) {
+            this.songIndex = index;
+          }
+        });
+        if (--this.songIndex == -1) {
+          this.songIndex = this.songInfo.length - 1;
+        }
+        this.soundInfo.songName = this.songInfo[this.songIndex].songName;
+        this.soundInfo.songurl = this.songInfo[this.songIndex].url;
+        this.soundInfo.singer = this.songInfo[this.songIndex].singer;
+        this.soundInfo.img = this.songInfo[this.songIndex].img;
+        this.getValue();
+      });
+    },
+    next() {
+      this.getSong().then(() => {
+        this.songInfo.forEach((item, index) => {
+          if (item.songName == this.soundInfo.songName) {
+            this.songIndex = index;
+          }
+        });
+        if (++this.songIndex == this.songInfo.length) {
+          this.songIndex = 0;
+        }
+        this.soundInfo.songName = this.songInfo[this.songIndex].songName;
+        this.soundInfo.songurl = this.songInfo[this.songIndex].url;
+        this.soundInfo.singer = this.songInfo[this.songIndex].singer;
+        this.soundInfo.img = this.songInfo[this.songIndex].img;
+        this.getValue();
+      });
+    },
     changeValue1() {
       this.Lists.forEach(item => {
         switch (item.Name) {
@@ -123,6 +162,7 @@ export default {
       });
     },
     changeValue2() {
+      this.isStop = this.soundInfo.play;
       this.Lists.forEach((item, index) => {
         switch (item.Name) {
           case "儿童模式":
@@ -134,7 +174,7 @@ export default {
     bindPickerChange: function(e) {
       console.log("picker发送选择改变，携带值为", e.target.value);
       this.index = e.target.value;
-      this.soundInfo.mode = e.target.value
+      this.soundInfo.mode = e.target.value;
       this.istime = true;
       this.getValue();
     },
@@ -169,6 +209,26 @@ export default {
             console.log(res.data, "res");
             if (res.data.inf && res.data.err != -1) {
               this.soundInfo = res.data.inf[0];
+            }
+            reslove();
+          }
+        });
+      });
+    },
+    getSong() {
+      return new Promise((reslove, reject) => {
+        uni.request({
+          url: this.$apis.songsApi,
+          data: this.songInfo,
+          method: "POST",
+          header: {
+            "custom-header": "hello" //自定义请求头信息
+          },
+          success: res => {
+            console.log(res.data, "res");
+            if (res.data.inf && res.data.err != -1) {
+              this.songInfo = res.data.inf;
+              console.log(this.songInfo);
             }
             reslove();
           }
