@@ -97,6 +97,7 @@ export default {
     this.lampInfo.equipName = params.equipName;
     this.lampInfo.name = params.roomname;
     this.getValue().then(() => {
+      this.changeMode();
       switch (this.lampInfo.color) {
         case 0:
           this.blue = "#E09101";
@@ -133,8 +134,9 @@ export default {
             break;
         }
       } else if (this.Name == "亮度调节") {
-        this.lampInfo.lightness = e.target.value;
+        this.$set(this.lampInfo,'lightness',e.target.value)
       } else {
+        console.log("aaa")
         this.lampInfo.mode = e.target.value;
         this.changeMode();
         switch (this.lampInfo.color) {
@@ -178,13 +180,13 @@ export default {
             if (res.data.inf && res.data.err != -1) {
               this.lampInfo = res.data.inf[0];
             }
-            this.changeMode();
             reslove();
           }
         });
       });
     },
     changeMode() {
+      console.log("aaaaa")
       if (this.lampInfo.mode == 0) {
         this.lampInfo.color = 0;
         this.lampInfo.lightness = 3;
