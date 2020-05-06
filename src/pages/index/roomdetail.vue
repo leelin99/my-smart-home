@@ -58,15 +58,15 @@ export default {
     params = option;
   },
   onReady() {
-    this.equipList();
+    this.equipList(this.equipInf);
     console.log(params, "params");
     this.roomName = params.roomname;
   },
   methods: {
     delEquip(e) {
       console.log(e);
-      this.delRoom({ name: e.equipName }).then(()=>{
-       this.equipList();
+      this.delRoom({ name: e.equipName }).then(() => {
+        this.equipList({});
       });
     },
     //页面跳转
@@ -131,11 +131,11 @@ export default {
             "custom-header": "hello" //自定义请求头信息
           },
           success: res => {
+            console.log(res.data);
             resolve();
             if (param.roomName) {
               const pages = getCurrentPages();
               const beforePage = pages[pages.length - 2];
-              console.log(beforePage);
               wx.navigateBack({
                 success: function() {}
               });
@@ -145,21 +145,24 @@ export default {
       });
     },
     // 列表添加和更新
-    equipList() {
-      this.equipInf.name = params.roomname;
-      uni.request({
-        url: this.$apis.equipApi,
-        data: this.equipInf,
-        method: "POST",
-        header: {
-          "custom-header": "hello" //自定义请求头信息
-        },
-        success: res => {
-          console.log(res.data, "res");
-          if (res.data.inf) {
-            this.lists = res.data.inf;
+    equipList(e) {
+      return new Promise((resolve, reject) => {
+        e.name = params.roomname;
+        uni.request({
+          url: this.$apis.equipApi,
+          data: e,
+          method: "POST",
+          header: {
+            "custom-header": "hello" //自定义请求头信息
+          },
+          success: res => {
+            console.log(res.data, "res");
+            if (res.data.inf) {
+              this.lists = res.data.inf;
+              resolve();
+            }
           }
-        }
+        });
       });
     },
     del() {
@@ -170,18 +173,27 @@ export default {
       if (e.equipName && e.seleVal != "请选择类别") {
         this.isshow = false;
         this.lists.push(e);
-        this.equipList();
+        this.equipList(this.equipInf)
+        uni.request({
+          url: this.$apis.roomlistApi,
+          data: { equipmentNum: this.lists.length, roomName: params.roomname },
+          method: "POST",
+           header: {
+            "custom-header": "hello" //自定义请求头信息
+          },
+          success: result => {}
+        });
       } else {
         if (!e.equipName) {
           wx.showToast({
             title: "请输入设备名",
-            icon: "node",
+            icon: "none",
             duration: 2000
           });
         } else if (e.seleVal == "请选择类别") {
           wx.showToast({
             title: "请选择类别",
-            icon: "node",
+            icon: "none",
             duration: 2000
           });
         }
