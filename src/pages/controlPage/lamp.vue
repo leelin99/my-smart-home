@@ -122,7 +122,7 @@ export default {
           case "0":
             this.blue = "#E09101";
             break;
-             case "1":
+          case "1":
             this.blue = "#9999FE";
             break;
           case "2":
@@ -136,6 +136,21 @@ export default {
         this.lampInfo.lightness = e.target.value;
       } else {
         this.lampInfo.mode = e.target.value;
+        this.changeMode();
+        switch (this.lampInfo.color) {
+          case 0:
+            this.blue = "#E09101";
+            break;
+          case 1:
+            this.blue = "#9999FE";
+            break;
+          case 2:
+            this.blue = "red";
+            break;
+          case 3:
+            this.blue = "#33E680";
+            break;
+        }
       }
       this.index = e.target.value;
       this.istime = true;
@@ -163,10 +178,23 @@ export default {
             if (res.data.inf && res.data.err != -1) {
               this.lampInfo = res.data.inf[0];
             }
+            this.changeMode();
             reslove();
           }
         });
       });
+    },
+    changeMode() {
+      if (this.lampInfo.mode == 0) {
+        this.lampInfo.color = 0;
+        this.lampInfo.lightness = 3;
+      } else if (this.lampInfo.mode == 1) {
+        this.lampInfo.color = 1;
+        this.lampInfo.lightness = 4;
+      } else {
+        this.lampInfo.color = 0;
+        this.lampInfo.lightness = 0;
+      }
     },
     canceltime(item) {
       item.isclick = 0;

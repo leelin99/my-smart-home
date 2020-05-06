@@ -127,6 +127,8 @@ router.post("/equipmentlist", (req, res) => {
               mode: 0,
               changer: 0,
               status:1,
+              play:1,
+              
             };
             db.exec(soundSqlInsert, params1, (err1, data, fields) => {
               if (err1) {
