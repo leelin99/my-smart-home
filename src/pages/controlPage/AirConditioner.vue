@@ -10,7 +10,7 @@
       <view style="position:absolute;top:15%;left:50%;transform:translateX(-50%)">室外：30°C 室内：25°C</view>
       <view
         style="position:absolute;top:30%;left:50%;transform:translateX(-45%);font-size:85px"
-      >{{airConInfo.temperature}}°</view>
+      >{{airConInfo.temperature>30?30:airConInfo.temperature<15?15:airConInfo.temperature}}°</view>
       <view
         style="position:absolute;top:60%;left:50%;transform:translateX(-50%);width: 100vw"
       >{{Lists[0].array[airConInfo.mode]}} 风向：{{Lists[1].isclick?"上下风":Lists[2].isclick?"左右风":"自动风"}} 风速：{{Lists[3].array[airConInfo.speed]}}</view>
@@ -19,8 +19,8 @@
         v-show="airConInfo.time==null"
       >定时:{{Lists[5].array[airConInfo.time]}}关闭</view>
       <view style="position:absolute;top:70%;left:50%;transform:translateX(-50%)">
-        <text style="font-size:80px;margin-right:20px" @tap="airConInfo.temperature++;getValue()">+</text>
-        <text style="font-size:80px;margin-left:20px" @tap="airConInfo.temperature--;getValue()">-</text>
+        <text style="font-size:80px;margin-right:20px" @tap="airConInfo.temperature++;if(airConInfo.temperature>30)airConInfo.temperature=30;getValue()">+</text>
+        <text style="font-size:80px;margin-left:20px" @tap="airConInfo.temperature--;if(airConInfo.temperature<15)airConInfo.temperature=15;getValue()">-</text>
       </view>
     </header>
     <nav class="nav">

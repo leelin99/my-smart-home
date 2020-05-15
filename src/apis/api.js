@@ -1,4 +1,4 @@
-const baseurl = 'http://localhost:3000'
+const baseurl = 'http://www.wazy999.cn:1082'
 const user = baseurl + "/user"
 const room = baseurl + "/room"
 

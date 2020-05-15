@@ -11,7 +11,7 @@
       <view style="position:absolute;top:10%;left:50%;transform:translateX(-50%)">热水器</view>
       <view
         style="position:absolute;top:20%;left:50%;transform:translateX(-45%);font-size:85px"
-      >{{heaterInfo.temperature}}°</view>
+      >{{heaterInfo.temperature>80?80:heaterInfo.temperature<20?20:heaterInfo.temperature}}°</view>
       <view
         style="position:absolute;top:50%;left:50%;transform:translateX(-50%)"
       >设置温度：{{heaterInfo.temperature}}°</view>
@@ -27,8 +27,8 @@
         {{heaterInfo.startTime + "~" + heaterInfo.endTime}}
       </view>
       <view style="position:absolute;top:70%;left:50%;transform:translateX(-50%)">
-        <text style="font-size:80px;margin-right:20px" @tap="heaterInfo.temperature-=5;getValue()">-</text>
-        <text style="font-size:80px;margin-left:20px" @tap="heaterInfo.temperature+=5;getValue()">+</text>
+        <text style="font-size:80px;margin-right:20px" @tap="heaterInfo.temperature-=5;if(eaterInfo.temperature>80)eaterInfo.temperature=80;getValue()">-</text>
+        <text style="font-size:80px;margin-left:20px" @tap="heaterInfo.temperature+=5;if(eaterInfo.temperature<20)eaterInfo.temperature=20;getValue()">+</text>
       </view>
     </header>
     <nav class="nav">
@@ -75,7 +75,7 @@ export default {
       endTime: "",
       week: "",
       status: "加热中",
-      actTemp: "75",
+      actTemp: "50",
       waterNum: "100",
       istime: false,
       heaterInfo: {

@@ -35,6 +35,12 @@
 			"style": {
 				"navigationBarTitleText": "门锁遥控器"
 			}
+		},
+		{
+			"path": "pages/user/user",
+			"style": {
+				"navigationBarTitleText": "我的"
+			}
 		}
 		
 	],
@@ -43,5 +49,20 @@
 		"navigationBarTitleText": "首页",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
-	}
+	},
+	"tabBar": {
+		"list": [{
+		  "pagePath": "pages/index/home",
+		  "text": "首页",
+		  "iconPath": "static/image/home_page.png",
+		  "selectedIconPath": "static/image/home_page_select.png"
+		},
+		{
+		  "pagePath": "pages/user/user",
+		  "text": "我的",
+		  "iconPath": "static/image/my.png",
+		  "selectedIconPath": "static/image/my_select.png"
+		}
+		]
+	  }
 }

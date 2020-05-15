@@ -19,7 +19,7 @@ let params1 = {};
  *
  * @apiParam {String} equipName 设备名字*
  * @apiParam {String} seleVal 设备种类*
- * @apiParam {String} iamge 设备图片
+ * @apiParam {String} image 设备图片
  * @apiParam {String} desc 设备描述
  *
  * @apiSuccess {Array} inf 设备信息

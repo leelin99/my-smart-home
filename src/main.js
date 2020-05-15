@@ -6,7 +6,7 @@ import apis from "./apis/api"
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios
 Vue.prototype.$apis = apis
-Vue.prototype.$basepath = "http://localhost:3000"
+Vue.prototype.$basepath = "http://www.wazy999.cn:1082/"
 App.mpType = 'app'
 
 const app = new Vue({

@@ -31,12 +31,15 @@ function forEachSql(message){
 wss.on("connection", (client) => {
   client.on("message", (message) => {
     console.log("received: %s", message);
+    if(message){
+      client.send(JSON.stringify(Data));
+    }
     clearInterval(check);
     check = setInterval(() => {
       let status = 0; 
       forEachSql(message)  
       if (receiveVal.length == Data.length) {
-        console.log("send1")
+        // console.log("send1")
         receiveVal.forEach((item, index) => {
           for (let element in item) {
             if (receiveVal[index][element] != Data[index][element]) {
@@ -55,6 +58,7 @@ wss.on("connection", (client) => {
     }, 1000);
   });
   client.on("close", () => {
+    clearInterval(check);
     console.log("关闭服务器");
   });
 });

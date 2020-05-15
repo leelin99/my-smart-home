@@ -16,7 +16,7 @@ const sqlUpdate = "update room set ? where roomName=?";
  *
  * @apiSuccess {Array} inf 房间列表
  */
-
+let i =0
 router.post("/roomlist", (req, res) => {
   if (req.body.roomName && !req.body.equipmentNum) {
     const { roomName } = req.body;
@@ -40,7 +40,12 @@ router.post("/roomlist", (req, res) => {
       }
     });
   } else if (!req.body.roomName) {
+    console.log("请求次数1",i++)
     db.exec(sqlSeach2, (err, data, fields) => {
+      if(err){
+        console.log(err)
+      }
+      console.log("请求次数2",i++)
       res.send({
         inf: data,
         err: 0,
