@@ -1,6 +1,7 @@
 const baseurl = 'http://www.wazy999.cn:1082'
 const user = baseurl + "/user"
 const room = baseurl + "/room"
+const login = baseurl + "/login"
 
 const api = {
     LoginApi: user + "/login" ,// 登录接口
@@ -14,5 +15,6 @@ const api = {
     heaterApi:room + '/heater',//热水器遥控器
     lampApi:room + '/lamp',//电灯遥控器
     songsApi:room + '/songs',//歌曲曲目
+    loginApi:login + '/login',//登录
 }
 export default api;

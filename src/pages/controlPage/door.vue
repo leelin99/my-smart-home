@@ -47,6 +47,7 @@
         </li>
       </ul>
     </nav>
+    <changePas ref="changePas"></changePas>
   </view>
 </template>
 
@@ -54,10 +55,12 @@
 let params = {};
 import mSwitch from "../../component/m-switch";
 import payKeyboard from "../../component/keyboard";
+import changePas from "../../component/changePas";
 export default {
   components: {
     mSwitch,
-    payKeyboard
+    payKeyboard,
+    changePas
   },
   data() {
     return {
@@ -132,6 +135,9 @@ export default {
         item.isclick = true;
       } else {
         item.isclick = !item.isclick;
+      }
+      if(item.Name == "密码设置"){
+        this.$refs.changePas.open()
       }
       this.getValue();
     },

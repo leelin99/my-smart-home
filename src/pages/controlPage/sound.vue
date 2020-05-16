@@ -53,15 +53,18 @@
         </li>
       </ul>
     </nav>
+    <songList :songList="songInfo" ref="songList" @selectSong="selectSong"></songList>
   </view>
 </template>
 
 <script>
 let params = {};
 import mSwitch from "../../component/m-switch";
+import songList from "../../component/songList"
 export default {
   components: {
-    mSwitch
+    mSwitch,
+    songList
   },
   data() {
     return {
@@ -108,6 +111,7 @@ export default {
   onReady() {
     this.soundInfo.equipName = params.equipName;
     this.soundInfo.name = params.roomname;
+    this.getSong()
     this.getValue().then(data => {
       this.changeValue2();
     });
@@ -117,6 +121,13 @@ export default {
       this.isStop = !this.isStop;
       this.soundInfo.play = this.isStop;
       this.getValue();
+    },
+    selectSong(item){
+       this.soundInfo.songName = item.songName;
+        this.soundInfo.songurl = item.url;
+        this.soundInfo.singer = item.singer;
+        this.soundInfo.img = item.img;
+        this.getValue();
     },
     before() {
       this.getSong().then(() => {
@@ -183,6 +194,9 @@ export default {
         item.isclick = true;
       } else {
         item.isclick = !item.isclick;
+      }
+      if (item.Name == "歌曲曲目") {
+        this.$refs.songList.open()
       }
       this.getValue();
     },

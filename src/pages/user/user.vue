@@ -25,8 +25,8 @@
 		<!-- 用户服务 -->
 		<view class="com-item">
 			<view class="com-wrap">
-				<view class="cell" v-for="(item, index) in serverList" :key="index">
-					<view class="cell-left">
+				<view class="cell" v-for="(item, index) in serverList" :key="index" @tap="out(item)">
+					<view class="cell-left" >
 						<image class="cell-icon" :src="item.icon" mode="aspectFill"></image>
 						<view class="cell-text">{{ item.title }}</view>
 					</view>
@@ -77,9 +77,29 @@ export default {
 					title: '版本',
 					icon: '../../static/user/icon-about.png',
 					text: '1.0.0'
+				},
+				{
+					title: '退出登录',
+					icon: '../../static/user/out.png',
+					text: '1.0.0'
 				}
 			]
 		};
+	},
+	methods:{
+		out(item){
+			console.log(item)
+			if(item.title=="退出登录"){
+				uni.reLaunch({
+    			   url: "../login/login",
+    			   success: res => {
+					  uni.removeStorageSync("setUserData")						   				  
+				   },
+    			   fail: err => {console.log(err)},
+    			   complete: () => {}
+    			 });
+				}
+		}
 	}
 };
 </script>
